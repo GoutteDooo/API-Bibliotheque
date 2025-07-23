@@ -3,14 +3,14 @@
     public class Emprunts
     {
         public int IdEmprunts { get; set; }
-        public DateTime Date_Emprunt { get; set; }
-        public bool Est_Rendu { get; set; }
-        public DateTime Retour_Emprunt { get; set; }
-        public int LivreId { get; set; }
+        public required DateTime DateEmprunt { get; set; }
+        public bool EstRendu { get; set; }
+        public required DateTime RetourEmprunt { get; set; }
+        public int IdLivres { get; set; }
         public required Livres Livres { get; set; }
 
         public int IdUtilisateur { get; set; }
-        public required Utilisateur Utilisateur { get; set; }
+        public required Utilisateurs Utilisateur { get; set; }
 
     }
 }
