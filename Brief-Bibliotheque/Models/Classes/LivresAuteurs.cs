@@ -2,9 +2,9 @@
 {
     public class LivresAuteurs
     {
-        public int LivreId { get; set; }
-        public int AuteurId { get; set; }
-        public Livre Livre { get; set; }
-        public Auteur Auteur { get; set; }
+        public int IdLivre { get; set; }
+        public int IdAuteur { get; set; }
+        public required Livre Livre { get; set; }
+        public required Auteur { get; set; }
     }
 }

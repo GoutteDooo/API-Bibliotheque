@@ -2,9 +2,9 @@
 {
     public class LivresGenres
     {
-        public int LivreId { get; set; }
-        public int GenreId { get; set; }
-        public Livre Livre { get; set; }
-        public Genre Genre{ get; set; }
+        public int IdLivre { get; set; }
+        public int IdGenre { get; set; }
+        public required Livre Livre { get; set; }
+        public required Genre Genre{ get; set; }
     }
 }
