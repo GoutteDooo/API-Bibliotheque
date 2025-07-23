@@ -9,8 +9,8 @@
         public int IdLivres { get; set; }
         public required Livres Livres { get; set; }
 
-        public int IdUtilisateur { get; set; }
-        public required Utilisateurs Utilisateur { get; set; }
+        public int IdUtilisateurs { get; set; }
+        public required Utilisateurs Utilisateurs { get; set; }
 
     }
 }

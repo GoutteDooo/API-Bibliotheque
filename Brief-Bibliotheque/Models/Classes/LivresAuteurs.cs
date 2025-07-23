@@ -1,4 +1,4 @@
-﻿namespace Brief_Bibliotheque.Models.Classes
+﻿/*namespace Brief_Bibliotheque.Models.Classes
 {
     public class LivresAuteurs
     {
@@ -6,5 +6,7 @@
         public int IdAuteur { get; set; }
         public required Livres Livre { get; set; }
         public required Auteurs Auteur { get; set; }
+
     }
 }
+*/

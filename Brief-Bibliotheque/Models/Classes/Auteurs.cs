@@ -2,6 +2,7 @@
 {
     public class Auteurs : Personnes
     {
-        public required List<LivresAuteurs> LivresAuteurs { get; set; } = new List<LivresAuteurs>();
+        public required List<Livres> Livres { get; set; } = new List<Livres>();
+
     }
 }
