@@ -2,7 +2,7 @@
 {
     public class Livres
     {
-        public int IdLivres { get; set; }
+        public int Id { get; set; }
         public required string Isbn { get; set; }
         public required string Titre { get; set; }
         public required int AnneePublication { get; set; }
