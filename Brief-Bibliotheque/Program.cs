@@ -1,3 +1,7 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Sqlite;
+using Brief_Bibliotheque.Models.Data;
+
 namespace Brief_Bibliotheque
 {
     public class Program
@@ -8,6 +12,9 @@ namespace Brief_Bibliotheque
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+
+            builder.Services.AddDbContext<BiblioDB>(options =>
+                options.UseSqlite("Data Source=biblio.db")); // ou SqlServer/Postgres selon ton cas
 
             var app = builder.Build();
 
