@@ -14,7 +14,7 @@ namespace Brief_Bibliotheque
             builder.Services.AddControllersWithViews();
 
             builder.Services.AddDbContext<BiblioDB>(options =>
-                options.UseSqlite("Data Source=biblio.db")); // ou SqlServer/Postgres selon ton cas
+                options.UseSqlite("Data Source=biblio.db"));
 
             var app = builder.Build();
 
