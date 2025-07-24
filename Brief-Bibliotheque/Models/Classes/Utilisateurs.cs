@@ -5,7 +5,7 @@ namespace Brief_Bibliotheque.Models.Classes
 {
     public class Utilisateurs : Personnes
     {
-        public int IdUtilisateurs { get; set; }
+        public int Id { get; set; }
         public required string Tel { get; set; }
         public required string NumeroDeRue { get; set; }
         public required string NomDeRue { get; set; }

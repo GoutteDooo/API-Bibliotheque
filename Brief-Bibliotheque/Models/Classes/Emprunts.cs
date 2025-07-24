@@ -2,7 +2,7 @@
 {
     public class Emprunts
     {
-        public int IdEmprunts { get; set; }
+        public int Id { get; set; }
         public required DateTime DateEmprunt { get; set; }
         public bool EstRendu { get; set; }
         public required DateTime RetourEmprunt { get; set; }
