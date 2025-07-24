@@ -10,22 +10,22 @@ using Brief_Bibliotheque.Models.Data;
 
 namespace Brief_Bibliotheque.Controllers
 {
-    public class AuteursController : Controller
+    public class ReservationsController : Controller
     {
         private readonly BiblioDB _context;
 
-        public AuteursController(BiblioDB context)
+        public ReservationsController(BiblioDB context)
         {
             _context = context;
         }
 
-        // GET: Auteurs
+        // GET: Reservations
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Auteurs.ToListAsync());
+            return View(await _context.Reservations.ToListAsync());
         }
 
-        // GET: Auteurs/Details/5
+        // GET: Reservations/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -33,48 +33,39 @@ namespace Brief_Bibliotheque.Controllers
                 return NotFound();
             }
 
-            var auteurs = await _context.Auteurs
+            var reservations = await _context.Reservations
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (auteurs == null)
+            if (reservations == null)
             {
                 return NotFound();
             }
 
-            return View(auteurs);
+            return View(reservations);
         }
 
-        // GET: Auteurs/Create
+        // GET: Reservations/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Auteurs/Create
+        // POST: Reservations/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        //[ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Nom,Prenom,DateDeNaissance")] Auteurs auteurs)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([Bind("Id,DateReservation,IdUtilisateurs,IdLivres")] Reservations reservations)
         {
-            Console.WriteLine("salut");
             if (ModelState.IsValid)
             {
-                _context.Add(auteurs);
+                _context.Add(reservations);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            else
-            {
-                foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
-                {
-                    Console.WriteLine(error.ErrorMessage);
-                }
-            }
-            //return View(auteurs);
-            return BadRequest(ModelState);
+            return View(reservations);
         }
 
-        // GET: Auteurs/Edit/5
+        // GET: Reservations/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -82,22 +73,22 @@ namespace Brief_Bibliotheque.Controllers
                 return NotFound();
             }
 
-            var auteurs = await _context.Auteurs.FindAsync(id);
-            if (auteurs == null)
+            var reservations = await _context.Reservations.FindAsync(id);
+            if (reservations == null)
             {
                 return NotFound();
             }
-            return View(auteurs);
+            return View(reservations);
         }
 
-        // POST: Auteurs/Edit/5
+        // POST: Reservations/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Nom,Prenom,DateDeNaissance")] Auteurs auteurs)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,DateReservation,IdUtilisateurs,IdLivres")] Reservations reservations)
         {
-            if (id != auteurs.Id)
+            if (id != reservations.Id)
             {
                 return NotFound();
             }
@@ -106,12 +97,12 @@ namespace Brief_Bibliotheque.Controllers
             {
                 try
                 {
-                    _context.Update(auteurs);
+                    _context.Update(reservations);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!AuteursExists(auteurs.Id))
+                    if (!ReservationsExists(reservations.Id))
                     {
                         return NotFound();
                     }
@@ -122,10 +113,10 @@ namespace Brief_Bibliotheque.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(auteurs);
+            return View(reservations);
         }
 
-        // GET: Auteurs/Delete/5
+        // GET: Reservations/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -133,34 +124,34 @@ namespace Brief_Bibliotheque.Controllers
                 return NotFound();
             }
 
-            var auteurs = await _context.Auteurs
+            var reservations = await _context.Reservations
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (auteurs == null)
+            if (reservations == null)
             {
                 return NotFound();
             }
 
-            return View(auteurs);
+            return View(reservations);
         }
 
-        // POST: Auteurs/Delete/5
+        // POST: Reservations/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var auteurs = await _context.Auteurs.FindAsync(id);
-            if (auteurs != null)
+            var reservations = await _context.Reservations.FindAsync(id);
+            if (reservations != null)
             {
-                _context.Auteurs.Remove(auteurs);
+                _context.Reservations.Remove(reservations);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool AuteursExists(int id)
+        private bool ReservationsExists(int id)
         {
-            return _context.Auteurs.Any(e => e.Id == id);
+            return _context.Reservations.Any(e => e.Id == id);
         }
     }
 }
