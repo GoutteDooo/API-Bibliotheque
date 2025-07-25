@@ -1,0 +1,43 @@
+﻿@model Brief_Bibliotheque.Models.Classes.Reservations
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Reservations</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="DateReservation" class="control-label"></label>
+                <input asp-for="DateReservation" class="form-control" />
+                <span asp-validation-for="DateReservation" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IdUtilisateurs" class="control-label"></label>
+                <input asp-for="IdUtilisateurs" class="form-control" />
+                <span asp-validation-for="IdUtilisateurs" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IdLivres" class="control-label"></label>
+                <input asp-for="IdLivres" class="form-control" />
+                <span asp-validation-for="IdLivres" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

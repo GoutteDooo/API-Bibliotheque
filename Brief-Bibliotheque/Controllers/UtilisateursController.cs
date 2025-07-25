@@ -10,22 +10,22 @@ using Brief_Bibliotheque.Models.Data;
 
 namespace Brief_Bibliotheque.Controllers
 {
-    public class AuteursController : Controller
+    public class UtilisateursController : Controller
     {
         private readonly BiblioDB _context;
 
-        public AuteursController(BiblioDB context)
+        public UtilisateursController(BiblioDB context)
         {
             _context = context;
         }
 
-        // GET: Auteurs
+        // GET: Utilisateurs
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Auteurs.ToListAsync());
+            return View(await _context.Utilisateurs.ToListAsync());
         }
 
-        // GET: Auteurs/Details/5
+        // GET: Utilisateurs/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -33,48 +33,39 @@ namespace Brief_Bibliotheque.Controllers
                 return NotFound();
             }
 
-            var auteurs = await _context.Auteurs
+            var utilisateurs = await _context.Utilisateurs
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (auteurs == null)
+            if (utilisateurs == null)
             {
                 return NotFound();
             }
 
-            return View(auteurs);
+            return View(utilisateurs);
         }
 
-        // GET: Auteurs/Create
+        // GET: Utilisateurs/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Auteurs/Create
+        // POST: Utilisateurs/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        //[ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Nom,Prenom,DateDeNaissance")] Auteurs auteurs)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([Bind("Id,Tel,NumeroDeRue,NomDeRue,Role,MotDePasse,Mail,Ville,CodePostal,Nom,Prenom,DateDeNaissance")] Utilisateurs utilisateurs)
         {
-            Console.WriteLine("salut");
             if (ModelState.IsValid)
             {
-                _context.Add(auteurs);
+                _context.Add(utilisateurs);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            else
-            {
-                foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
-                {
-                    Console.WriteLine(error.ErrorMessage);
-                }
-            }
-            //return View(auteurs);
-            return BadRequest(ModelState);
+            return View(utilisateurs);
         }
 
-        // GET: Auteurs/Edit/5
+        // GET: Utilisateurs/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -82,22 +73,22 @@ namespace Brief_Bibliotheque.Controllers
                 return NotFound();
             }
 
-            var auteurs = await _context.Auteurs.FindAsync(id);
-            if (auteurs == null)
+            var utilisateurs = await _context.Utilisateurs.FindAsync(id);
+            if (utilisateurs == null)
             {
                 return NotFound();
             }
-            return View(auteurs);
+            return View(utilisateurs);
         }
 
-        // POST: Auteurs/Edit/5
+        // POST: Utilisateurs/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Nom,Prenom,DateDeNaissance")] Auteurs auteurs)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Tel,NumeroDeRue,NomDeRue,Role,MotDePasse,Mail,Ville,CodePostal,Nom,Prenom,DateDeNaissance")] Utilisateurs utilisateurs)
         {
-            if (id != auteurs.Id)
+            if (id != utilisateurs.Id)
             {
                 return NotFound();
             }
@@ -106,12 +97,12 @@ namespace Brief_Bibliotheque.Controllers
             {
                 try
                 {
-                    _context.Update(auteurs);
+                    _context.Update(utilisateurs);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!AuteursExists(auteurs.Id))
+                    if (!UtilisateursExists(utilisateurs.Id))
                     {
                         return NotFound();
                     }
@@ -122,10 +113,10 @@ namespace Brief_Bibliotheque.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(auteurs);
+            return View(utilisateurs);
         }
 
-        // GET: Auteurs/Delete/5
+        // GET: Utilisateurs/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -133,34 +124,34 @@ namespace Brief_Bibliotheque.Controllers
                 return NotFound();
             }
 
-            var auteurs = await _context.Auteurs
+            var utilisateurs = await _context.Utilisateurs
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (auteurs == null)
+            if (utilisateurs == null)
             {
                 return NotFound();
             }
 
-            return View(auteurs);
+            return View(utilisateurs);
         }
 
-        // POST: Auteurs/Delete/5
+        // POST: Utilisateurs/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var auteurs = await _context.Auteurs.FindAsync(id);
-            if (auteurs != null)
+            var utilisateurs = await _context.Utilisateurs.FindAsync(id);
+            if (utilisateurs != null)
             {
-                _context.Auteurs.Remove(auteurs);
+                _context.Utilisateurs.Remove(utilisateurs);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool AuteursExists(int id)
+        private bool UtilisateursExists(int id)
         {
-            return _context.Auteurs.Any(e => e.Id == id);
+            return _context.Utilisateurs.Any(e => e.Id == id);
         }
     }
 }
