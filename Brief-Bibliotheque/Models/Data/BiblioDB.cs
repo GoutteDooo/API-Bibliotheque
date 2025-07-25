@@ -16,8 +16,17 @@ namespace Brief_Bibliotheque.Models.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            // Configuration many-to-many Livre-Genre
+            modelBuilder.Entity<Livres>()
+                .HasMany(l => l.Genres)
+                .WithMany(g => g.Livres);
+
+            // Configuration many-to-many Livre-Auteur  
+            modelBuilder.Entity<Livres>()
+                .HasMany(l => l.Auteurs)
+                .WithMany(a => a.Livres);
+
             base.OnModelCreating(modelBuilder);
-            // Code à implémenter si nécessaire
         }
     }
 }

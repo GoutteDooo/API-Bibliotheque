@@ -13,8 +13,8 @@
 
         public List<Reservations> Reservations { get; set; } = new List<Reservations>();
         public List<Emprunts> Emprunts { get; set; } = new List<Emprunts>();
-        public required List<Genres> Genres { get; set; } = new List<Genres>();
-        public required List<Auteurs> Auteurs { get; set; } = new List<Auteurs>();
+        public List<Genres> Genres { get; set; } = new List<Genres>();
+        public List<Auteurs> Auteurs { get; set; } = new List<Auteurs>();
 
         /*      public List<LivresGenres> LivresGenres { get; set; } = new List<LivresGenres>();
                 public List<LivresAuteurs> LivreAuteurs{ get; set; } = new List<LivresAuteurs>();*/

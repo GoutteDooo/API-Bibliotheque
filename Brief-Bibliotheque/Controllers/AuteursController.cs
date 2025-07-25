@@ -53,25 +53,16 @@ namespace Brief_Bibliotheque.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        //[ValidateAntiForgeryToken]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Nom,Prenom,DateDeNaissance")] Auteurs auteurs)
         {
-            Console.WriteLine("salut");
             if (ModelState.IsValid)
             {
                 _context.Add(auteurs);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            else
-            {
-                foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
-                {
-                    Console.WriteLine(error.ErrorMessage);
-                }
-            }
-            //return View(auteurs);
-            return BadRequest(ModelState);
+            return View(auteurs);
         }
 
         // GET: Auteurs/Edit/5
