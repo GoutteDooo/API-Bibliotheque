@@ -1,4 +1,5 @@
 ﻿@model Brief_Bibliotheque.Models.Classes.Livres
+@using Brief_Bibliotheque.Models.Classes
 
 @{
     ViewData["Title"] = "Create";
@@ -46,6 +47,51 @@
                 <label class="form-check-label">
                     <input class="form-check-input" asp-for="EstDisponible" /> @Html.DisplayNameFor(model => model.EstDisponible)
                 </label>
+            </div>
+            <!-- Section pour sélectionner les genres -->
+            <div class="form-group">
+                <label>Genres</label>
+                <div style="max-height: 200px; overflow-y: auto; border: 1px solid #ddd; padding: 10px; margin-top: 5px;">
+                    @if (ViewBag.Genres != null)
+                    {
+                        @foreach (var genre in (List<Genres>)ViewBag.Genres)
+                        {
+                            <div class="form-check">
+                                <input type="checkbox"
+                                       name="selectedGenres"
+                                       value="@genre.Id"
+                                       class="form-check-input"
+                                       id="genre_@genre.Id" />
+                                <label class="form-check-label" for="genre_@genre.Id">
+                                    @genre.NomGenres
+                                </label>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+
+            <!-- Section pour sélectionner les auteurs -->
+            <div class="form-group">
+                <label>Auteurs</label>
+                <div style="max-height: 200px; overflow-y: auto; border: 1px solid #ddd; padding: 10px; margin-top: 5px;">
+                    @if (ViewBag.Auteurs != null)
+                    {
+                        @foreach (var auteur in (List<Brief_Bibliotheque.Models.Classes.Auteurs>)ViewBag.Auteurs)
+                        {
+                            <div class="form-check">
+                                <input type="checkbox"
+                                       name="selectedAuteurs"
+                                       value="@auteur.Id"
+                                       class="form-check-input"
+                                       id="auteur_@auteur.Id" />
+                                <label class="form-check-label" for="auteur_@auteur.Id">
+                                    @auteur.Nom
+                                </label>
+                            </div>
+                        }
+                    }
+                </div>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
