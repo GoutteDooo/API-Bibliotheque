@@ -56,7 +56,10 @@ namespace Brief_Bibliotheque.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Livres livres, int[] selectedGenres, int[] selectedAuteurs)
+        public async Task<IActionResult> Create(
+    [Bind("Id,Isbn,Titre,AnneePublication,Etat,EstEmprunter,EstReserve,EstDisponible")] Livres livres,
+    int[] selectedGenres,
+    int[] selectedAuteurs)
         {
             if (ModelState.IsValid)
             {
