@@ -3,9 +3,9 @@ using System.Text.Json.Serialization;
 
 namespace Brief_Bibliotheque.Models.Classes
 {
-    public class Utilisateurs : Personnes
+    public class Utilisateur : Personne
     {
-        public int Id { get; set; }
+        public int UtilisateurId { get; set; }
         public required string Tel { get; set; }
         public required string NumeroDeRue { get; set; }
         public required string NomDeRue { get; set; }
@@ -17,6 +17,6 @@ namespace Brief_Bibliotheque.Models.Classes
         public required string Ville { get; set; }
         public required string CodePostal { get; set; }
 
-        public List<Reservations> Reservations { get; set; } = new List<Reservations>();
+        public List<Reservation> Reservations { get; set; } = new List<Reservation>();
     }
 }

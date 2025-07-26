@@ -3,9 +3,9 @@
     public class LivresGenres
     {
         int Id { get; set; }
-        public int IdLivres { get; set; }
-        public int IdGenres { get; set; }
-        public required Livres Livre { get; set; }
-        public required Genres Genre{ get; set; }
+        public int IdLivre { get; set; }
+        public int IdGenre { get; set; }
+        public required Livre Livre { get; set; }
+        public required Genre Genre{ get; set; }
     }
 }
