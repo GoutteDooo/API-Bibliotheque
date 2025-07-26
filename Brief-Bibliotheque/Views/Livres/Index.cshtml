@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Brief_Bibliotheque.Models.Classes.Livres>
+﻿@model IEnumerable<Brief_Bibliotheque.Models.Classes.Livre>
 
 @{
     ViewData["Title"] = "Index";
@@ -25,7 +25,7 @@
                 @Html.DisplayNameFor(model => model.Etat)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.EstEmprunter)
+                @Html.DisplayNameFor(model => model.EstEmprunte)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.EstReserve)
@@ -52,7 +52,7 @@
                 @Html.DisplayFor(modelItem => item.Etat)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.EstEmprunter)
+                @Html.DisplayFor(modelItem => item.EstEmprunte)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.EstReserve)

@@ -1,4 +1,4 @@
-﻿@model Brief_Bibliotheque.Models.Classes.Emprunts
+﻿@model Brief_Bibliotheque.Models.Classes.Emprunt
 
 @{
     ViewData["Title"] = "Create";
@@ -33,9 +33,9 @@
                 <span asp-validation-for="IdLivres" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="IdUtilisateurs" class="control-label"></label>
-                <input asp-for="IdUtilisateurs" class="form-control" />
-                <span asp-validation-for="IdUtilisateurs" class="text-danger"></span>
+                <label asp-for="IdUtilisateur" class="control-label"></label>
+                <input asp-for="IdUtilisateur" class="form-control" />
+                <span asp-validation-for="IdUtilisateur" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

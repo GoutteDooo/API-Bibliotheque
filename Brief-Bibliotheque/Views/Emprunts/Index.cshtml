@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Brief_Bibliotheque.Models.Classes.Emprunts>
+﻿@model IEnumerable<Brief_Bibliotheque.Models.Classes.Emprunt>
 
 @{
     ViewData["Title"] = "Index";
@@ -25,7 +25,7 @@
                 @Html.DisplayNameFor(model => model.IdLivres)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.IdUtilisateurs)
+                @Html.DisplayNameFor(model => model.IdUtilisateur)
             </th>
             <th></th>
         </tr>
@@ -46,7 +46,7 @@
                 @Html.DisplayFor(modelItem => item.IdLivres)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.IdUtilisateurs)
+                @Html.DisplayFor(modelItem => item.IdUtilisateur)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
