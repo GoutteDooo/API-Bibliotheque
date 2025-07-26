@@ -62,22 +62,13 @@ namespace Brief_Bibliotheque.Controllers
         //[ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Nom,Prenom,DateDeNaissance")] Auteur auteurs)
         {
-            Console.WriteLine("salut");
             if (ModelState.IsValid)
             {
                 _context.Add(auteurs);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            else
-            {
-                foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
-                {
-                    Console.WriteLine(error.ErrorMessage);
-                }
-            }
-            //return View(auteurs);
-            return BadRequest(ModelState);
+            return View(auteurs);
         }
 
         // GET: Auteurs/Edit/5

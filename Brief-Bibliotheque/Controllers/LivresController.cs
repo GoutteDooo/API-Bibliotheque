@@ -50,8 +50,10 @@ namespace Brief_Bibliotheque.Controllers
         }
 
         // GET: Livres/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
+            ViewBag.Genres = await _context.Genres.ToListAsync();
+            ViewBag.Auteurs = await _context.Auteurs.ToListAsync();
             return View();
         }
 
@@ -60,17 +62,43 @@ namespace Brief_Bibliotheque.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Isbn,Titre,AnneePublication,Etat,EstEmprunter,EstReserve,EstDisponible")] Livre livres)
+        public async Task<IActionResult> Create(
+    [Bind("Id,Isbn,Titre,AnneePublication,Etat,EstEmprunter,EstReserve,EstDisponible")] Livre livres,
+    int[] selectedGenres,
+    int[] selectedAuteurs)
         {
             if (ModelState.IsValid)
             {
                 _context.Add(livres);
                 await _context.SaveChangesAsync();
+
+                // Associer les genres sélectionnés
+                if (selectedGenres != null && selectedGenres.Length > 0)
+                {
+                    var genres = await _context.Genres
+                        .Where(g => selectedGenres.Contains(g.Id))
+                        .ToListAsync();
+                    livres.Genres = genres;
+                }
+
+                // Associer les auteurs sélectionnés
+                if (selectedAuteurs != null && selectedAuteurs.Length > 0)
+                {
+                    var auteurs = await _context.Auteurs
+                        .Where(a => selectedAuteurs.Contains(a.Id))
+                        .ToListAsync();
+                    livres.Auteurs = auteurs;
+                }
+
+                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
+            // Recharger les listes en cas d'erreur
+            ViewBag.Genres = await _context.Genres.ToListAsync();
+            ViewBag.Auteurs = await _context.Auteurs.ToListAsync();
             return View(livres);
         }
-
         // GET: Livres/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
