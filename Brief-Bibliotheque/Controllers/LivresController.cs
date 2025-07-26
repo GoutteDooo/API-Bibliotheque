@@ -22,7 +22,13 @@ namespace Brief_Bibliotheque.Controllers
         // GET: Livres
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Livres.ToListAsync());
+            // Récupérer les livres avec leurs auteurs et genres
+            var livres = await _context.Livres
+                .Include(l => l.Auteurs)
+                .Include(l => l.Genres)
+                .ToListAsync();
+
+            return View(livres);
         }
 
         // GET: Livres/Details/5

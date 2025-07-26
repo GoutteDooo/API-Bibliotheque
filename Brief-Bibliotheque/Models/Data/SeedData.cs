@@ -17,6 +17,20 @@ public static class SeedData
             /* LIVRES */
             if (!context.Livres.Any()) // S'il n'y a pas de livres présents, on remplit la seed
             {
+                var rowling = new Auteur
+                {
+                    Nom = "J.K.",
+                    Prenom = "Rowling",
+                    DateDeNaissance = DateTime.Parse("1965-7-31")
+                };
+                var verne = new Auteur
+                {
+                    Nom = "Verne",
+                    Prenom = "Jules",
+                    DateDeNaissance = DateTime.Parse("1828-2-8")
+                };
+                var fantaisie = new Genre { NomGenre = "Fantaisie" };
+                var aventure = new Genre { NomGenre = "Aventure" };
                 context.Livres.AddRange(
                     new Livre
                     {
@@ -29,14 +43,10 @@ public static class SeedData
                         EstDisponible = true,
                         Genres = new List<Genre>
                         {
-                            new Genre { NomGenre = "Fantaisie" },
+                            fantaisie
                         },
                         Auteurs = new List<Auteur> {
-                            new Auteur {
-                                Nom = "J.K.",
-                                Prenom = "Rowling",
-                                DateDeNaissance = DateTime.Parse("1965-7-31")
-                            }
+                            rowling
                         }
                     },
                     new Livre
@@ -50,14 +60,10 @@ public static class SeedData
                         EstDisponible = true,
                         Genres = new List<Genre>
                         {
-                            new Genre { NomGenre = "Fantaisie" },
+                            fantaisie
                         },
                         Auteurs = new List<Auteur> {
-                            new Auteur {
-                                Nom = "J.K.",
-                                Prenom = "Rowling",
-                                DateDeNaissance = DateTime.Parse("1965-7-31")
-                            }
+                            rowling
                         }
                     },
                     new Livre
@@ -71,14 +77,10 @@ public static class SeedData
                         EstDisponible = true,
                         Genres = new List<Genre>
                         {
-                            new Genre { NomGenre = "Fantaisie" },
+                            fantaisie
                         },
                         Auteurs = new List<Auteur> {
-                            new Auteur {
-                                Nom = "J.K.",
-                                Prenom = "Rowling",
-                                DateDeNaissance = DateTime.Parse("1965-7-31")
-                            }
+                            rowling
                         }
                     },
                     new Livre
@@ -92,14 +94,10 @@ public static class SeedData
                         EstDisponible = true,
                         Genres = new List<Genre>
                         {
-                            new Genre { NomGenre = "Fantaisie" },
+                            fantaisie
                         },
                         Auteurs = new List<Auteur> {
-                            new Auteur {
-                                Nom = "J.K.",
-                                Prenom = "Rowling",
-                                DateDeNaissance = DateTime.Parse("1965-7-31")
-                            }
+                            rowling
                         }
                     },
                     new Livre
@@ -113,14 +111,10 @@ public static class SeedData
                         EstDisponible = true,
                         Genres = new List<Genre>
                         {
-                            new Genre { NomGenre = "Fantaisie" },
+                            fantaisie
                         },
                         Auteurs = new List<Auteur> {
-                            new Auteur {
-                                Nom = "J.K.",
-                                Prenom = "Rowling",
-                                DateDeNaissance = DateTime.Parse("1965-7-31")
-                            }
+                            rowling
                         }
                     },
                     new Livre
@@ -134,14 +128,10 @@ public static class SeedData
                         EstDisponible = true,
                         Genres = new List<Genre>
                         {
-                            new Genre { NomGenre = "Fantaisie" },
+                            fantaisie
                         },
                         Auteurs = new List<Auteur> {
-                            new Auteur {
-                                Nom = "J.K.",
-                                Prenom = "Rowling",
-                                DateDeNaissance = DateTime.Parse("1965-7-31")
-                            }
+                            rowling
                         }
                     },
                     new Livre
@@ -155,14 +145,10 @@ public static class SeedData
                         EstDisponible = true,
                         Genres = new List<Genre>
                         {
-                            new Genre { NomGenre = "Fantaisie" },
+                            fantaisie
                         },
                         Auteurs = new List<Auteur> {
-                            new Auteur {
-                                Nom = "J.K.",
-                                Prenom = "Rowling",
-                                DateDeNaissance = DateTime.Parse("1965-7-31")
-                            }
+                            rowling
                         }
                     },
                     new Livre
@@ -176,14 +162,10 @@ public static class SeedData
                         EstDisponible = true,
                         Genres = new List<Genre>
                         {
-                            new Genre { NomGenre = "Aventure" },
+                            aventure
                         },
                         Auteurs = new List<Auteur> {
-                            new Auteur {
-                                Nom = "Verne",
-                                Prenom = "Jules",
-                                DateDeNaissance = DateTime.Parse("1828-2-8")
-                            }
+                            verne
                         }
                     },
                     new Livre
@@ -197,15 +179,11 @@ public static class SeedData
                         EstDisponible = true,
                         Genres = new List<Genre>
                         {
-                            new Genre { NomGenre = "Fantaisie" },
-                            new Genre { NomGenre = "Aventure" },
+                            fantaisie,
+                            aventure
                         },
                         Auteurs = new List<Auteur> {
-                            new Auteur {
-                                Nom = "Verne",
-                                Prenom = "Jules",
-                                DateDeNaissance = DateTime.Parse("1828-2-8")
-                            }
+                            verne
                         }
                     }
                 );

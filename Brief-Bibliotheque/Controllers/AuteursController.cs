@@ -22,7 +22,13 @@ namespace Brief_Bibliotheque.Controllers
         // GET: Auteurs
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Auteurs.ToListAsync());
+            // Récupérer chaque auteur de manière distincte
+            var auteurs = await _context.Auteurs.Distinct().ToListAsync();
+            foreach (var auteur in auteurs)
+            {
+                Console.WriteLine(auteur.Id);
+            }
+            return View(auteurs);
         }
 
         // GET: Auteurs/Details/5
