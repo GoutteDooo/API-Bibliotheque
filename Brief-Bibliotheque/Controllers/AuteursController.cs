@@ -54,7 +54,7 @@ namespace Brief_Bibliotheque.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         //[ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Nom,Prenom,DateDeNaissance")] Auteurs auteurs)
+        public async Task<IActionResult> Create([Bind("Id,Nom,Prenom,DateDeNaissance")] Auteur auteurs)
         {
             Console.WriteLine("salut");
             if (ModelState.IsValid)
@@ -95,7 +95,7 @@ namespace Brief_Bibliotheque.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Nom,Prenom,DateDeNaissance")] Auteurs auteurs)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Nom,Prenom,DateDeNaissance")] Auteur auteurs)
         {
             if (id != auteurs.Id)
             {

@@ -54,7 +54,7 @@ namespace Brief_Bibliotheque.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Isbn,Titre,AnneePublication,Etat,EstEmprunter,EstReserve,EstDisponible")] Livres livres)
+        public async Task<IActionResult> Create([Bind("Id,Isbn,Titre,AnneePublication,Etat,EstEmprunter,EstReserve,EstDisponible")] Livre livres)
         {
             if (ModelState.IsValid)
             {
@@ -86,7 +86,7 @@ namespace Brief_Bibliotheque.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Isbn,Titre,AnneePublication,Etat,EstEmprunter,EstReserve,EstDisponible")] Livres livres)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Isbn,Titre,AnneePublication,Etat,EstEmprunter,EstReserve,EstDisponible")] Livre livres)
         {
             if (id != livres.Id)
             {
