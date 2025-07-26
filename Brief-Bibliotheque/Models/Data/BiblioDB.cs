@@ -7,12 +7,12 @@ namespace Brief_Bibliotheque.Models.Data
         public BiblioDB(DbContextOptions<BiblioDB> options) : base(options)
         {
         }
-        public DbSet<Utilisateurs> Utilisateurs => Set<Utilisateurs>();
-        public DbSet<Livres> Livres => Set<Livres>();
-        public DbSet<Emprunts> Emprunts => Set<Emprunts>();
-        public DbSet<Reservations> Reservations => Set<Reservations>();
-        public DbSet<Auteurs> Auteurs => Set<Auteurs>();
-        public DbSet<Genres> Genres => Set<Genres>();
+        public DbSet<Utilisateur> Utilisateurs => Set<Utilisateur>();
+        public DbSet<Livre> Livres => Set<Livre>();
+        public DbSet<Emprunt> Emprunts => Set<Emprunt>();
+        public DbSet<Reservation> Reservations => Set<Reservation>();
+        public DbSet<Auteur> Auteurs => Set<Auteur>();
+        public DbSet<Genre> Genres => Set<Genre>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

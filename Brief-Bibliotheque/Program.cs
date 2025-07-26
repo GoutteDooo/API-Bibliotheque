@@ -18,6 +18,14 @@ namespace Brief_Bibliotheque
 
             var app = builder.Build();
 
+            // Remplir le contexte de "données graines"
+            using (var scope = app.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+
+                SeedData.Initialize(services);
+            }
+
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
             {
