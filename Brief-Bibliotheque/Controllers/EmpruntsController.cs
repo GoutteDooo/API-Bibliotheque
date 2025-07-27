@@ -26,6 +26,7 @@ namespace Brief_Bibliotheque.Controllers
             var emprunts = await _context.Emprunts
                 .Include(l => l.Livre)
                 .Include(l => l.Utilisateur)
+                .OrderBy(l => l.RetourEmprunt)
                 .ToListAsync();
 
             return View(emprunts);
@@ -52,7 +53,9 @@ namespace Brief_Bibliotheque.Controllers
         // GET: Emprunts/Create
         public IActionResult Create()
         {
-            return View();
+            // Retourner un EmpruntViewModel pour n'afficher que les propriétés intéressantes
+            var empruntViewModel = new EmpruntViewModel() { DateEmprunt = DateTime.UtcNow };
+            return View(empruntViewModel);
         }
 
         // POST: Emprunts/Create
@@ -60,15 +63,34 @@ namespace Brief_Bibliotheque.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,DateEmprunt,EstRendu,RetourEmprunt,IdLivres,IdUtilisateurs")] Emprunt emprunts)
+        public async Task<IActionResult> Create([Bind("Id,DateEmprunt,IdLivre,IdUtilisateur")] EmpruntViewModel empruntVM)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(emprunts);
+                var livre = await _context.Livres.FirstOrDefaultAsync(l => l.Id == empruntVM.IdLivre);
+                var utilisateur = await _context.Utilisateurs.FirstOrDefaultAsync(u => u.Id == empruntVM.IdUtilisateur);
+
+                if (livre == null) return Problem("Livre non trouvé :(");
+                if (utilisateur == null) return Problem("Membre non trouvé :(");
+
+                var emprunt = new Emprunt
+                {
+                    DateEmprunt = empruntVM.DateEmprunt,
+                    EstRendu = false,
+                    RetourEmprunt = empruntVM.DateEmprunt.AddDays(14),
+                    IdLivre = livre.Id,
+                    Livre = livre,
+                    IdUtilisateur = utilisateur.Id,
+                    Utilisateur = utilisateur
+                };
+
+
+                _context.Add(emprunt);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(emprunts);
+
+            return View(empruntVM);
         }
 
         // GET: Emprunts/Edit/5
@@ -79,12 +101,12 @@ namespace Brief_Bibliotheque.Controllers
                 return NotFound();
             }
 
-            var emprunts = await _context.Emprunts.FindAsync(id);
-            if (emprunts == null)
+            var emprunt = await _context.Emprunts.FindAsync(id);
+            if (emprunt == null)
             {
                 return NotFound();
             }
-            return View(emprunts);
+            return View(emprunt);
         }
 
         // POST: Emprunts/Edit/5
@@ -92,9 +114,9 @@ namespace Brief_Bibliotheque.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,DateEmprunt,EstRendu,RetourEmprunt,IdLivres,IdUtilisateurs")] Emprunt emprunts)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,DateEmprunt,EstRendu,RetourEmprunt,IdLivre,IdUtilisateur")] Emprunt emprunt)
         {
-            if (id != emprunts.Id)
+            if (id != emprunt.Id)
             {
                 return NotFound();
             }
@@ -103,12 +125,12 @@ namespace Brief_Bibliotheque.Controllers
             {
                 try
                 {
-                    _context.Update(emprunts);
+                    _context.Update(emprunt);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!EmpruntsExists(emprunts.Id))
+                    if (!EmpruntsExists(emprunt.Id))
                     {
                         return NotFound();
                     }
@@ -119,7 +141,7 @@ namespace Brief_Bibliotheque.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(emprunts);
+            return View(emprunt);
         }
 
         // GET: Emprunts/Delete/5

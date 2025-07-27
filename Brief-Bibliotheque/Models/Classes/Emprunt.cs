@@ -15,13 +15,12 @@ namespace Brief_Bibliotheque.Models.Classes
         public required DateTime RetourEmprunt { get; set; }
         [Display(Name = "ID du livre")]
         public int IdLivre { get; set; }
-        [Required]
-        public required Livre Livre { get; set; }
+        public Livre? Livre { get; set; }
 
         [Display(Name = "ID du Membre")]
         public int IdUtilisateur { get; set; }
         [Display(Name = "Membre")]
-        public required Utilisateur Utilisateur { get; set; }
+        public Utilisateur? Utilisateur { get; set; }
 
     }
 }

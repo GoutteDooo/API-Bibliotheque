@@ -1,4 +1,4 @@
-﻿@model Brief_Bibliotheque.Models.Classes.Emprunt
+﻿@model Brief_Bibliotheque.Models.Classes.EmpruntViewModel
 
 @{
     ViewData["Title"] = "Create";
@@ -17,16 +17,6 @@
                 <input asp-for="DateEmprunt" class="form-control" />
                 <span asp-validation-for="DateEmprunt" class="text-danger"></span>
             </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="EstRendu" /> @Html.DisplayNameFor(model => model.EstRendu)
-                </label>
-            </div>
-            <div class="form-group">
-                <label asp-for="RetourEmprunt" class="control-label"></label>
-                <input asp-for="RetourEmprunt" class="form-control" />
-                <span asp-validation-for="RetourEmprunt" class="text-danger"></span>
-            </div>
             <div class="form-group">
                 <label asp-for="IdLivre" class="control-label"></label>
                 <input asp-for="IdLivre" class="form-control" />
@@ -37,7 +27,7 @@
                 <input asp-for="IdUtilisateur" class="form-control" />
                 <span asp-validation-for="IdUtilisateur" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group mt-2">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
