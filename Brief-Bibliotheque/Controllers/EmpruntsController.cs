@@ -106,7 +106,27 @@ namespace Brief_Bibliotheque.Controllers
             {
                 return NotFound();
             }
-            return View(emprunt);
+
+            // Appliquer le prolongement du prêt
+            emprunt.RetourEmprunt = emprunt.RetourEmprunt.AddDays(7);
+
+            try
+            {
+                _context.Update(emprunt);
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!EmpruntsExists(emprunt.Id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            return RedirectToAction(nameof(Index));
         }
 
         // POST: Emprunts/Edit/5
@@ -176,6 +196,9 @@ namespace Brief_Bibliotheque.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+
+        // GET : Emprunts/Rendu
+
 
         private bool EmpruntsExists(int id)
         {

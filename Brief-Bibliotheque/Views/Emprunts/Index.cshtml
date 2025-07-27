@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<Brief_Bibliotheque.Models.Classes.Emprunt>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Emprunts";
 }
 
 <h1>Emprunts</h1>
@@ -25,13 +25,13 @@
                 @Html.DisplayNameFor(model => model.IdLivre)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Livre.Titre)
+                @Html.DisplayNameFor(model => model.Livre!.Titre)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.IdUtilisateur)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Utilisateur.Nom)
+                @Html.DisplayNameFor(model => model.Utilisateur!.Nom)
             </th>
             <th></th>
         </tr>
@@ -53,16 +53,17 @@
                     @Html.DisplayFor(modelItem => item.IdLivre)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Livre.Titre)
+                    @Html.DisplayFor(modelItem => item.Livre!.Titre)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.IdUtilisateur)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Utilisateur.Nom)
+                    @Html.DisplayFor(modelItem => item.Utilisateur!.Nom)
                 </td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Edit" asp-route-id="@item.Id">Prolonger l'emprunt</a> |
+                    <a asp-action="Rendre" asp-route-id="@item.Id">Emprunt rendu</a> |
                     <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
                     <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
                 </td>
