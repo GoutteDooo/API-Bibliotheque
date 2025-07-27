@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Brief_Bibliotheque.Models.Classes;
+using Brief_Bibliotheque.Models.Classes.Enums;
+using Brief_Bibliotheque.Models.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Brief_Bibliotheque.Models.Classes;
-using Brief_Bibliotheque.Models.Data;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Brief_Bibliotheque.Controllers
 {
@@ -63,6 +64,15 @@ namespace Brief_Bibliotheque.Controllers
         // GET: Utilisateurs/Create
         public IActionResult Create()
         {
+            // Cast les rôles dans le ViewBag pour pouvoir les afficher dans la vue
+            ViewBag.Roles = Enum.GetValues(typeof(Role)) // Obtient l'array suivant : Array { Role.Membre, Role.Employe, Role.Administrateur }
+                .Cast<Role>() // Convertir chaque élément de l'array en type Role (sinon object par défaut) => IEnumarable<Role>
+                .Select(r => new SelectListItem // Pour chaque Role r, on crée un nouvel object SelectListItem contenant : 
+                {
+                    Value = ((int)r).ToString(), // la valeur envoyée au serveur quand l'utilisateur choisit cette option (conversion en entier puis en chaîne)
+                    Text = r.ToString() // le texte affiché à l'écran dans la balise <select> (on récupère le nom textuel de l'enum ; "Membre" par exemple)
+                }).ToList();
+
             return View();
         }
 
