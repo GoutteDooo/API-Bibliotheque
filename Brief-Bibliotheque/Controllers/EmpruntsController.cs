@@ -22,7 +22,13 @@ namespace Brief_Bibliotheque.Controllers
         // GET: Emprunts
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Emprunts.ToListAsync());
+            // Récupérer les Livres et Utilisateurs pour chaque emprunt afin de les envoyer à la vue
+            var emprunts = await _context.Emprunts
+                .Include(l => l.Livre)
+                .Include(l => l.Utilisateur)
+                .ToListAsync();
+
+            return View(emprunts);
         }
 
         // GET: Emprunts/Details/5
