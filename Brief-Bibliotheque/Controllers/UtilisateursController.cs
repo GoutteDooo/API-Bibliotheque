@@ -22,7 +22,24 @@ namespace Brief_Bibliotheque.Controllers
         // GET: Utilisateurs
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Utilisateurs.ToListAsync());
+            // On passe chaque utilisateur dans sa ViewModel car on ne veut pas envoyer son mot de passe dans la vue
+            var model = await _context.Utilisateurs
+                .Select(u => new UtilisateurViewModel
+                {
+                    Id = u.Id,
+                    Role = u.Role,
+                    Nom = u.Nom,
+                    Prenom = u.Prenom,
+                    DateDeNaissance = u.DateDeNaissance,
+                    Mail = u.Mail,
+                    Tel = u.Tel,
+                    NumeroDeRue = u.NumeroDeRue,
+                    NomDeRue = u.NomDeRue,
+                    Ville = u.Ville,
+                    CodePostal = u.CodePostal,
+                }).ToListAsync();
+
+                return View(model);
         }
 
         // GET: Utilisateurs/Details/5
