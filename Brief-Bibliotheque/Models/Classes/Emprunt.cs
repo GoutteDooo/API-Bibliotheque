@@ -16,12 +16,12 @@ namespace Brief_Bibliotheque.Models.Classes
         [Display(Name = "ID du livre")]
         public int IdLivres { get; set; }
         [Required]
-        public required Livre Livres { get; set; }
+        public required Livre Livre { get; set; }
 
         [Display(Name = "ID du Membre")]
         public int IdUtilisateur { get; set; }
         [Display(Name = "Membre")]
-        public required Utilisateur Utilisateurs { get; set; }
+        public required Utilisateur Utilisateur { get; set; }
 
     }
 }
