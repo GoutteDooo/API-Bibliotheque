@@ -8,7 +8,7 @@ namespace Brief_Bibliotheque.Models.Classes
         [Display(Name = "Date de l'emprunt")]
         [DataType(DataType.Date)]
         public required DateTime DateEmprunt { get; set; }
-        [Display(Name = "Emprunt rendu")]
+        [Display(Name = "Etat")]
         public bool EstRendu { get; set; }
         [Display(Name = "Date de retour")]
         [DataType(DataType.Date)]
