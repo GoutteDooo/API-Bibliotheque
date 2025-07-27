@@ -65,13 +65,7 @@ namespace Brief_Bibliotheque.Controllers
         public IActionResult Create()
         {
             // Cast les rôles dans le ViewBag pour pouvoir les afficher dans la vue
-            ViewBag.Roles = Enum.GetValues(typeof(Role)) // Obtient l'array suivant : Array { Role.Membre, Role.Employe, Role.Administrateur }
-                .Cast<Role>() // Convertir chaque élément de l'array en type Role (sinon object par défaut) => IEnumarable<Role>
-                .Select(r => new SelectListItem // Pour chaque Role r, on crée un nouvel object SelectListItem contenant : 
-                {
-                    Value = ((int)r).ToString(), // la valeur envoyée au serveur quand l'utilisateur choisit cette option (conversion en entier puis en chaîne)
-                    Text = r.ToString() // le texte affiché à l'écran dans la balise <select> (on récupère le nom textuel de l'enum ; "Membre" par exemple)
-                }).ToList();
+            ViewBag.Roles = ObtenirViewBagRoles();
 
             return View();
         }
@@ -101,6 +95,9 @@ namespace Brief_Bibliotheque.Controllers
             }
 
             var utilisateurs = await _context.Utilisateurs.FindAsync(id);
+
+            ViewBag.Roles = ObtenirViewBagRoles();
+
             if (utilisateurs == null)
             {
                 return NotFound();
@@ -179,6 +176,20 @@ namespace Brief_Bibliotheque.Controllers
         private bool UtilisateursExists(int id)
         {
             return _context.Utilisateurs.Any(e => e.Id == id);
+        }
+
+        /**
+         * Retourne les rôles de la classe enum Role pour l'affichage en liste déroulante avec <select></select>
+         */
+        private static List<SelectListItem> ObtenirViewBagRoles()
+        {
+            return Enum.GetValues(typeof(Role)) // Obtient l'array suivant : Array { Role.Membre, Role.Employe, Role.Administrateur }
+                .Cast<Role>() // Convertir chaque élément de l'array en type Role (sinon object par défaut) => IEnumarable<Role>
+                .Select(r => new SelectListItem // Pour chaque Role r, on crée un nouvel object SelectListItem contenant : 
+                {
+                    Value = ((int)r).ToString(), // la valeur envoyée au serveur quand l'utilisateur choisit cette option (conversion en entier puis en chaîne)
+                    Text = r.ToString() // le texte affiché à l'écran dans la balise <select> (on récupère le nom textuel de l'enum ; "Membre" par exemple)
+                }).ToList();
         }
     }
 }
