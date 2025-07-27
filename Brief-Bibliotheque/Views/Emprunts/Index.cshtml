@@ -44,7 +44,14 @@
                     @Html.DisplayFor(modelItem => item.DateEmprunt)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.EstRendu)
+                    @if (item.EstRendu)
+                    {
+                        <p class="badge bg-black">Terminé</p>
+                    }
+                    else
+                    {
+                        <p class="badge bg-danger">En cours</p>
+                    }
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.RetourEmprunt)

@@ -187,10 +187,10 @@ namespace Brief_Bibliotheque.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var emprunts = await _context.Emprunts.FindAsync(id);
-            if (emprunts != null)
+            var emprunt = await _context.Emprunts.FindAsync(id);
+            if (emprunt != null)
             {
-                _context.Emprunts.Remove(emprunts);
+                _context.Emprunts.Remove(emprunt);
             }
 
             await _context.SaveChangesAsync();
@@ -198,7 +198,33 @@ namespace Brief_Bibliotheque.Controllers
         }
 
         // GET : Emprunts/Rendu
+        public async Task<IActionResult> Rendre(int id)
+        {
+            var emprunt = await _context.Emprunts.FindAsync(id);
 
+            if (emprunt != null)
+            {
+                emprunt.EstRendu = true;
+                try
+                {
+                    _context.Update(emprunt);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!EmpruntsExists(emprunt.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            return View(emprunt);
+        }
 
         private bool EmpruntsExists(int id)
         {
