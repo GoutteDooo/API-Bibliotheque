@@ -11,6 +11,5 @@ namespace Brief_Bibliotheque.Models.Classes
         [Display(Name = "Date de naissance")]
         [DataType(DataType.Date)]
         public required DateTime DateDeNaissance { get; set; }
-
     }
 }
