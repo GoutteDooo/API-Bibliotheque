@@ -9,7 +9,7 @@
 <p>
     <a asp-action="Create">Insérer un nouveau livre</a>
 </p>
-<table class="table">
+<table id="livresTable" class="table">
     <thead>
         <tr>
             <th>
@@ -18,8 +18,8 @@
             <th>
                 @Html.DisplayNameFor(model => model.Isbn)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Titre)
+            <th onclick="trierParTitre()" style="cursor: pointer;">
+                @Html.DisplayNameFor(model => model.Titre) <span id="titreTri">↕</span>
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.AnneePublication)
@@ -125,3 +125,33 @@
         }
     </tbody>
 </table>
+
+@section Scripts {
+    <script>
+        let ordreCroissant = true;
+
+        function trierParTitre() {
+            const table = document.getElementById("livresTable");
+            const tbody = table.querySelector("tbody");
+            const rows = Array.from(tbody.querySelectorAll("tr"));
+
+            rows.sort((a, b) => {
+                const titreA = a.children[2].innerText.trim().toLowerCase();
+                const titreB = b.children[2].innerText.trim().toLowerCase();
+
+                if (titreA < titreB) return ordreCroissant ? -1 : 1;
+                if (titreA > titreB) return ordreCroissant ? 1 : -1;
+                return 0;
+            });
+
+            // Replacer les lignes dans le bon ordre
+            rows.forEach(row => tbody.appendChild(row));
+
+            // Alterner le sens du tri
+            ordreCroissant = !ordreCroissant;
+
+            // Mise à jour de l’icône
+            document.getElementById("titreTri").textContent = ordreCroissant ? "↑" : "↓";
+        }
+    </script>
+}
