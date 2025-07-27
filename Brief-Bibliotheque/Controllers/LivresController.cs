@@ -19,16 +19,39 @@ namespace Brief_Bibliotheque.Controllers
             _context = context;
         }
 
-        // GET: Livres
-        public async Task<IActionResult> Index()
+        // GET : Livres/Index?recherche={recherche}
+        /**
+         * Affiche les détails du livre recherché s'il existe, sinon retourne une erreur 404
+         */
+        public async Task<IActionResult> Index(string? recherche)
         {
-            // Récupérer les livres avec leurs auteurs et genres
-            var livres = await _context.Livres
-                .Include(l => l.Auteurs)
-                .Include(l => l.Genres)
-                .ToListAsync();
+            if (_context.Livres == null) return Problem("Aucun livre dans la base de données");
 
-            return View(livres);
+            Console.BackgroundColor = ConsoleColor.Red;
+            Console.WriteLine("RECHERCHE : " + recherche);
+            if (string.IsNullOrEmpty(recherche))
+            {
+                // Récupérer les livres avec leurs auteurs et genres
+                var livres = await _context.Livres
+                    .Include(l => l.Auteurs)
+                    .Include(l => l.Genres)
+                    .ToListAsync();
+
+                return View(livres);
+            }
+            // Si la recherche n'est pas nulle ou vide
+            else
+            {
+                var livres = await _context.Livres
+                    .Include(l => l.Auteurs)
+                    .Include(l => l.Genres)
+                    .Where(l => l.Titre!.ToUpper().Contains(recherche.ToUpper()))
+                    .ToListAsync();
+
+                if (livres == null) return Problem("Le livre recherché n'existe pas :(");
+
+                return View(livres);
+            }
         }
 
         // GET: Livres/Details/5
