@@ -4,7 +4,7 @@
     ViewData["Title"] = "Les Livres";
 }
 
-<h1>Index</h1>
+<h1>Livres</h1>
 
 <p>
     <a asp-action="Create">Insérer un nouveau livre</a>
@@ -62,7 +62,23 @@
                     @Html.DisplayFor(modelItem => item.AnneePublication)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Etat)
+                    @switch (item.Etat)
+                    {
+                        case "Neuf":
+                            <p class="badge bg-success">Neuf</p>
+                            break;
+                        case "Bon":
+                            <p class="badge bg-info">Bon</p>
+                            break;
+                        case "Usé":
+                            <p class="badge bg-Warning">Usé</p>
+                            break;
+                        case "Dégradé":
+                            <p class="badge bg-danger">Dégradé</p>
+                            break;
+                        default:
+                            break;
+                    }
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.EstEmprunte)
