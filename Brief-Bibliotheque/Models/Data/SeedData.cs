@@ -287,6 +287,7 @@ public static class SeedData
             {
                 DateReservation = DateTime.Parse("2025-7-27"),
                 Utilisateur = uBob,
+                IdUtilisateur = uBob.Id,
                 Livre = livreEmprunt,
                 IdLivre = livreEmprunt.Id,
             };
