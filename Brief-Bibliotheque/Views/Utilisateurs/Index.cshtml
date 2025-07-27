@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<Brief_Bibliotheque.Models.Classes.UtilisateurViewModel>
+@using Brief_Bibliotheque.Models.Classes.Enums
 
 @{
     ViewData["Title"] = "Membres";
@@ -49,47 +50,68 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Role)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Nom)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Prenom)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DateDeNaissance)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Mail)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Tel)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NumeroDeRue)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NomDeRue)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Ville)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CodePostal)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Id)
+                </td>
+                <td>
+                    @switch (item.Role)
+                    {
+                        case Role.Membre:
+                            <p class="badge bg-success">Membre</p>
+                            break;
+                        case Role.Employé:
+                            <p class="badge bg-primary">Employé</p>
+                            break;
+                        case Role.Administrateur:
+                            <p class="badge bg-danger">Admin</p>
+                            break;
+                        default:
+                            break;
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nom)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Prenom)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateDeNaissance)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Mail)
+                </td>
+                <td>
+                    @if (!string.IsNullOrEmpty(item.Tel))
+                    {
+                        @item.Tel
+                    }
+                    else
+                    {
+                        <p class="text-danger fw-bold">Pas de numéro!</p>
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NumeroDeRue)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NomDeRue)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Ville)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CodePostal)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
