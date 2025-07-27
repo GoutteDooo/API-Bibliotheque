@@ -4,7 +4,9 @@ using Brief_Bibliotheque.Models.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 using System;
+
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -75,15 +77,19 @@ namespace Brief_Bibliotheque.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Tel,NumeroDeRue,NomDeRue,Role,MotDePasse,Mail,Ville,CodePostal,Nom,Prenom,DateDeNaissance")] Utilisateur utilisateurs)
+        public async Task<IActionResult> Create([Bind("Id,Tel,NumeroDeRue,NomDeRue,Role,MotDePasse,Mail,Ville,CodePostal,Nom,Prenom,DateDeNaissance")] Utilisateur utilisateur)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(utilisateurs);
+                // Hacher le mdp donné par l'utilisateur
+                var hasher = new PasswordHasher<Utilisateur>();
+                utilisateur.MotDePasse = hasher.HashPassword(utilisateur, utilisateur.MotDePasse);
+
+                _context.Add(utilisateur);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(utilisateurs);
+            return View(utilisateur);
         }
 
         // GET: Utilisateurs/Edit/5
@@ -110,9 +116,9 @@ namespace Brief_Bibliotheque.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Tel,NumeroDeRue,NomDeRue,Role,MotDePasse,Mail,Ville,CodePostal,Nom,Prenom,DateDeNaissance")] Utilisateur utilisateurs)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Tel,NumeroDeRue,NomDeRue,Role,MotDePasse,Mail,Ville,CodePostal,Nom,Prenom,DateDeNaissance")] Utilisateur utilisateur)
         {
-            if (id != utilisateurs.Id)
+            if (id != utilisateur.Id)
             {
                 return NotFound();
             }
@@ -121,12 +127,12 @@ namespace Brief_Bibliotheque.Controllers
             {
                 try
                 {
-                    _context.Update(utilisateurs);
+                    _context.Update(utilisateur);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!UtilisateursExists(utilisateurs.Id))
+                    if (!UtilisateursExists(utilisateur.Id))
                     {
                         return NotFound();
                     }
@@ -137,7 +143,7 @@ namespace Brief_Bibliotheque.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(utilisateurs);
+            return View(utilisateur);
         }
 
         // GET: Utilisateurs/Delete/5

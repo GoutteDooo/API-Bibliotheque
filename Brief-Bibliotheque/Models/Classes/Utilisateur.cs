@@ -19,7 +19,7 @@ namespace Brief_Bibliotheque.Models.Classes
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public required Role Role { get; set; }
         [Required]
-        [StringLength(50)]
+        [StringLength(300, MinimumLength = 10)]
         public required string MotDePasse { get; set; }
         [RegularExpression(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$")]
         [StringLength(70, MinimumLength = 9)]
