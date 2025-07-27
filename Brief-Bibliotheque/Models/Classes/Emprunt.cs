@@ -14,7 +14,7 @@ namespace Brief_Bibliotheque.Models.Classes
         [DataType(DataType.Date)]
         public required DateTime RetourEmprunt { get; set; }
         [Display(Name = "ID du livre")]
-        public int IdLivres { get; set; }
+        public int IdLivre { get; set; }
         [Required]
         public required Livre Livre { get; set; }
 

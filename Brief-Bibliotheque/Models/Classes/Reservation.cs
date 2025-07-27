@@ -5,7 +5,7 @@ namespace Brief_Bibliotheque.Models.Classes
 {
     public class Reservation
     {
-        public required int Id { get; set; }
+        public int Id { get; set; }
         [Display(Name = "Date de la réservation")]
         [DataType(DataType.Date)]
         public required DateTime DateReservation { get; set; }
