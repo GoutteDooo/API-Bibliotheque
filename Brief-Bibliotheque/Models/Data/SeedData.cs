@@ -91,7 +91,21 @@ public static class SeedData
                 Ville = "Brico Dépôt",
                 CodePostal = "10000"
             };
-            context.Utilisateurs.AddRange(uToto, uAlice, uBob);
+            
+            context.Utilisateurs.AddRange(uToto, uAlice, uBob,
+                new Utilisateur
+                {
+                    Nom = "dupont",
+                    Prenom = "jean",
+                    DateDeNaissance = DateTime.Parse("1992-7-21"),
+                    NumeroDeRue = "11",
+                    NomDeRue = "Rue de la paix",
+                    Role = Classes.Enums.Role.Administrateur,
+                    MotDePasse = "jeandupooooooont",
+                    Mail = "jean@dupont.eau",
+                    Ville = "Paris",
+                    CodePostal = "75001"
+                });
             /* LIVRES */
             context.Livres.AddRange(
                 new Livre
