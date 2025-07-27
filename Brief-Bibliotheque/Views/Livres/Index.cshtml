@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<Brief_Bibliotheque.Models.Classes.Livre>
 
 @{
-    ViewData["Title"] = "Les Livres";
+    ViewData["Title"] = "Livres";
 }
 
 <h1>Livres</h1>
@@ -81,13 +81,34 @@
                     }
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.EstEmprunte)
+                    @if (item.EstEmprunte)
+                    {
+                        <p class="text-danger">Emprunté</p>
+                    }
+                    else
+                    {
+                        <p class="text-secondary">Non emprunté</p>
+                    }
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.EstReserve)
+                    @if (!item.EstReserve)
+                    {
+                        <p class="text-secondary">Non réservé</p>
+                    }
+                    else
+                    {
+                        <p class="text-danger">Réservé</p>
+                    }
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.EstDisponible)
+                    @if (item.EstDisponible)
+                    {
+                        <p class="text-success">Disponible</p>
+                    }
+                    else
+                    {
+                        <p class="text-danger">Indisponible</p>
+                    }
                 </td>
                 <td>
                     @string.Join(", ", item.Auteurs.Select(a => a.Prenom + " " + a.Nom))
