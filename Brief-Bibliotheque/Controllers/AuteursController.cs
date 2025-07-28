@@ -40,6 +40,7 @@ namespace Brief_Bibliotheque.Controllers
             }
 
             var auteurs = await _context.Auteurs
+                .Include(l => l.Livres)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (auteurs == null)
             {
