@@ -8,6 +8,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Controllers\NewFolder1\**" />
+    <Compile Remove="Controllers\SwaggerEndPoint\**" />
+    <Content Remove="Controllers\NewFolder1\**" />
+    <Content Remove="Controllers\SwaggerEndPoint\**" />
+    <EmbeddedResource Remove="Controllers\NewFolder1\**" />
+    <EmbeddedResource Remove="Controllers\SwaggerEndPoint\**" />
+    <None Remove="Controllers\NewFolder1\**" />
+    <None Remove="Controllers\SwaggerEndPoint\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.18" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.18">
       <PrivateAssets>all</PrivateAssets>
