@@ -38,12 +38,14 @@
             @foreach (var livre in livresTries)
             {
                 if (livre.EstDisponible == true){
-                <span> @livre.AnneePublication @livre.Titre, Disponible</span>
+                <span> @livre.AnneePublication @livre.Titre, <span class="text-success">Disponible</span></span>
+                    <a asp-controller="Livres" asp-action="Details" asp-route-id="@livre.Id" class="text-primary">Plus d'infos</a>
                     <br />
                 }
                 else if (livre.EstEmprunte || livre.EstReserve)
                 {
-                    <span> @livre.AnneePublication @livre.Titre, Indisponible </span>
+                    <span> @livre.AnneePublication @livre.Titre, <span class="text-danger">Indisponible</span></span>
+                    <a asp-controller="Livres" asp-action="Details" asp-route-id="@livre.Id" class="text-primary">Plus d'infos</a>
                     <br />
                 }
             }
