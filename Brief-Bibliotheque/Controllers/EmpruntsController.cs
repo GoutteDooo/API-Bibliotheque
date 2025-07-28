@@ -73,6 +73,22 @@ namespace Brief_Bibliotheque.Controllers
                 if (livre == null) return Problem("Livre non trouvé :(");
                 if (utilisateur == null) return Problem("Membre non trouvé :(");
 
+                // Vérifier si le livre est déjà emprunté
+                // Si c'est le cas, annuler l'emprunt
+                if (livre.EstEmprunte) return Problem("Livre déjà emprunté!");
+                // Sinon, vérifier s'il est déjà réservé
+                if (livre.EstReserve)
+                {
+                    // Si c'est le cas, aller retrouver la réservation associée
+                    var reservation = _context.Reservations.FirstOrDefaultAsync(r => r.IdLivre == livre.Id);
+                    if (reservation == null) return Problem("Le livre est réservé, mais la réservation n'a pas été trouvée...");
+
+                    // Vérifier si l'id réservateur est différent de l'id de l'emprunteur
+                    Console.WriteLine("RESERVATION : " + reservation);
+                }
+                // Si c'est le cas, annuler l'emprunt
+                // Sinon, c'est tout bon
+
                 var emprunt = new Emprunt
                 {
                     DateEmprunt = empruntVM.DateEmprunt,
@@ -83,6 +99,7 @@ namespace Brief_Bibliotheque.Controllers
                     IdUtilisateur = utilisateur.Id,
                     Utilisateur = utilisateur
                 };
+
 
 
                 _context.Add(emprunt);

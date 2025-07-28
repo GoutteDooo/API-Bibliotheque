@@ -60,15 +60,33 @@ namespace Brief_Bibliotheque.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,DateReservation,IdUtilisateurs,IdLivres")] Reservation reservations)
+        public async Task<IActionResult> Create([Bind("Id,DateReservation,IdUtilisateur,IdLivre")] Reservation reservation)
         {
+            Console.WriteLine("POST OK");
+
+            var livre = await _context.Livres.FirstOrDefaultAsync(l => l.Id == reservation.IdLivre);
+            var utilisateur = await _context.Utilisateurs.FirstOrDefaultAsync(u => u.Id == reservation.IdUtilisateur);
+
+            if (livre == null) return Problem("Livre non trouvé :(");
+            if (utilisateur == null) return Problem("Membre non trouvé :(");
+
             if (ModelState.IsValid)
             {
-                _context.Add(reservations);
+                var newReservation = new Reservation
+                {
+                    Id = reservation.Id,
+                    DateReservation = reservation.DateReservation,
+                    IdUtilisateur = utilisateur.Id,
+                    Utilisateur = utilisateur,
+                    IdLivre = livre.Id,
+                    Livre = livre
+                };
+
+                _context.Add(newReservation);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(reservations);
+            return View(reservation);
         }
 
         // GET: Reservations/Edit/5
@@ -79,12 +97,12 @@ namespace Brief_Bibliotheque.Controllers
                 return NotFound();
             }
 
-            var reservations = await _context.Reservations.FindAsync(id);
-            if (reservations == null)
+            var reservation = await _context.Reservations.FindAsync(id);
+            if (reservation == null)
             {
                 return NotFound();
             }
-            return View(reservations);
+            return View(reservation);
         }
 
         // POST: Reservations/Edit/5
@@ -92,9 +110,9 @@ namespace Brief_Bibliotheque.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,DateReservation,IdUtilisateurs,IdLivres")] Reservation reservations)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,DateReservation,IdUtilisateur,IdLivre")] Reservation reservation)
         {
-            if (id != reservations.Id)
+            if (id != reservation.Id)
             {
                 return NotFound();
             }
@@ -103,12 +121,12 @@ namespace Brief_Bibliotheque.Controllers
             {
                 try
                 {
-                    _context.Update(reservations);
+                    _context.Update(reservation);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ReservationsExists(reservations.Id))
+                    if (!ReservationsExists(reservation.Id))
                     {
                         return NotFound();
                     }
@@ -119,7 +137,7 @@ namespace Brief_Bibliotheque.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(reservations);
+            return View(reservation);
         }
 
         // GET: Reservations/Delete/5
@@ -130,14 +148,14 @@ namespace Brief_Bibliotheque.Controllers
                 return NotFound();
             }
 
-            var reservations = await _context.Reservations
+            var reservation = await _context.Reservations
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (reservations == null)
+            if (reservation == null)
             {
                 return NotFound();
             }
 
-            return View(reservations);
+            return View(reservation);
         }
 
         // POST: Reservations/Delete/5
@@ -145,10 +163,10 @@ namespace Brief_Bibliotheque.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var reservations = await _context.Reservations.FindAsync(id);
-            if (reservations != null)
+            var reservation = await _context.Reservations.FindAsync(id);
+            if (reservation != null)
             {
-                _context.Reservations.Remove(reservations);
+                _context.Reservations.Remove(reservation);
             }
 
             await _context.SaveChangesAsync();
