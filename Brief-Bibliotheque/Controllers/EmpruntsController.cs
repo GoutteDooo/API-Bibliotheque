@@ -20,13 +20,29 @@ namespace Brief_Bibliotheque.Controllers
         }
 
         // GET: Emprunts
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(bool? enCours = null)
         {
-            // Récupérer les Livres et Utilisateurs pour chaque emprunt afin de les envoyer à la vue
-            var emprunts = await _context.Emprunts
-                .Include(l => l.Livre)
-                .Include(l => l.Utilisateur)
-                .OrderBy(l => l.RetourEmprunt)
+            // Récupérer les Emprunts et Utilisateurs pour chaque emprunt afin de les envoyer à la vue
+            var query = _context.Emprunts
+                .Include(e => e.Livre)
+                .Include(e => e.Utilisateur)
+                .AsQueryable();
+
+            // Filtrer selon le statut si spécifié
+            if (enCours.HasValue)
+            {
+                if (enCours.Value) // emprunts en cours
+                {
+                    query = query.Where(e => !e.EstRendu);  // EstRendu = false
+                }
+                else // emprunts terminés
+                {
+                    query = query.Where(e => e.EstRendu);   // EstRendu = true
+                }
+            }
+
+            var emprunts = await query
+                .OrderBy(e => e.RetourEmprunt)  // Tri par date de retour
                 .ToListAsync();
 
             return View(emprunts);

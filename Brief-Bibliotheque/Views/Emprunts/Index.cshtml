@@ -6,6 +6,12 @@
 
 <h1>Emprunts</h1>
 
+<div class="mb-3">
+    <a asp-action="Index" class="btn btn-secondary">Tous les emprunts</a>
+    <a asp-action="Index" asp-route-enCours="true" class="btn btn-warning">En cours</a>
+    <a asp-action="Index" asp-route-enCours="false" class="btn btn-success">Terminés</a>
+</div>
+
 <p>
     <a asp-action="Create">Nouvel emprunt</a>
 </p>
