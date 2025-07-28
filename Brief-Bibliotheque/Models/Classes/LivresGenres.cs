@@ -1,12 +1,11 @@
-﻿/*namespace Brief_Bibliotheque.Models.Classes
+﻿namespace Brief_Bibliotheque.Models.Classes
 {
     public class LivresGenres
     {
-        public int IdLivres { get; set; }
-        public int IdGenres { get; set; }
-        public required Livres Livre { get; set; }
+        int Id { get; set; }
+        public int IdLivre { get; set; }
+        public int IdGenre { get; set; }
+        public required Livre Livre { get; set; }
         public required Genre Genre{ get; set; }
     }
-
 }
-*/

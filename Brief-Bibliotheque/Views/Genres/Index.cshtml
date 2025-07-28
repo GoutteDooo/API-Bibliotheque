@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Brief_Bibliotheque.Models.Genres>
+﻿@model IEnumerable<Brief_Bibliotheque.Models.Genre>
 
 @{
     ViewData["Title"] = "Index";
@@ -13,7 +13,7 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.NomGenres)
+                @Html.DisplayNameFor(model => model.NomGenre)
             </th>
             <th></th>
         </tr>
@@ -22,7 +22,7 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.NomGenres)
+                @Html.DisplayFor(modelItem => item.NomGenre)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

@@ -1,22 +1,25 @@
-﻿@model IEnumerable<Brief_Bibliotheque.Models.Classes.Livres>
+﻿@model IEnumerable<Brief_Bibliotheque.Models.Classes.Livre>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Livres";
 }
 
-<h1>Index</h1>
+<h1>Livres</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">Insérer un nouveau livre</a>
 </p>
-<table class="table">
+<table id="livresTable" class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Isbn)
+                @Html.DisplayNameFor(model => model.Id)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Titre)
+                @Html.DisplayNameFor(model => model.Isbn)
+            </th>
+            <th onclick="trierParTitre()" style="cursor: pointer;">
+                @Html.DisplayNameFor(model => model.Titre) <span id="titreTri">↕</span>
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.AnneePublication)
@@ -25,7 +28,7 @@
                 @Html.DisplayNameFor(model => model.Etat)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.EstEmprunter)
+                @Html.DisplayNameFor(model => model.EstEmprunte)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.EstReserve)
@@ -33,39 +36,122 @@
             <th>
                 @Html.DisplayNameFor(model => model.EstDisponible)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Auteurs)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Genres)
+            </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Isbn)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Titre)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AnneePublication)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Etat)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EstEmprunter)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EstReserve)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EstDisponible)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Isbn)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Titre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AnneePublication)
+                </td>
+                <td>
+                    @switch (item.Etat)
+                    {
+                        case "Neuf":
+                            <p class="badge bg-success">Neuf</p>
+                            break;
+                        case "Bon":
+                            <p class="badge bg-info">Bon</p>
+                            break;
+                        case "Usé":
+                            <p class="badge bg-secondary">Usé</p>
+                            break;
+                        case "Dégradé":
+                            <p class="badge bg-danger">Dégradé</p>
+                            break;
+                        default:
+                            break;
+                    }
+                </td>
+                <td>
+                    @if (item.EstEmprunte)
+                    {
+                        <p class="text-danger">Emprunté</p>
+                    }
+                    else
+                    {
+                        <p class="text-secondary">Non emprunté</p>
+                    }
+                </td>
+                <td>
+                    @if (!item.EstReserve)
+                    {
+                        <p class="text-secondary">Non réservé</p>
+                    }
+                    else
+                    {
+                        <p class="text-danger">Réservé</p>
+                    }
+                </td>
+                <td>
+                    @if (item.EstDisponible)
+                    {
+                        <p class="text-success">Disponible</p>
+                    }
+                    else
+                    {
+                        <p class="text-danger">Indisponible</p>
+                    }
+                </td>
+                <td>
+                    @string.Join(", ", item.Auteurs.Select(a => a.Prenom + " " + a.Nom))
+                </td>
+                <td>
+                    @string.Join(", ", item.Genres.Select(g => g.NomGenre))
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
+
+@section Scripts {
+    <script>
+        let ordreCroissant = true;
+
+        function trierParTitre() {
+            const table = document.getElementById("livresTable");
+            const tbody = table.querySelector("tbody");
+            const rows = Array.from(tbody.querySelectorAll("tr"));
+
+            rows.sort((a, b) => {
+                const titreA = a.children[2].innerText.trim().toLowerCase();
+                const titreB = b.children[2].innerText.trim().toLowerCase();
+
+                if (titreA < titreB) return ordreCroissant ? -1 : 1;
+                if (titreA > titreB) return ordreCroissant ? 1 : -1;
+                return 0;
+            });
+
+            // Replacer les lignes dans le bon ordre
+            rows.forEach(row => tbody.appendChild(row));
+
+            // Alterner le sens du tri
+            ordreCroissant = !ordreCroissant;
+
+            // Mise à jour de l’icône
+            document.getElementById("titreTri").textContent = ordreCroissant ? "↑" : "↓";
+        }
+    </script>
+}

@@ -22,7 +22,13 @@ namespace Brief_Bibliotheque.Controllers
         // GET: Auteurs
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Auteurs.ToListAsync());
+            // Récupérer chaque auteur de manière distincte
+            var auteurs = await _context.Auteurs.Distinct().ToListAsync();
+            foreach (var auteur in auteurs)
+            {
+                Console.WriteLine(auteur.Id);
+            }
+            return View(auteurs);
         }
 
         // GET: Auteurs/Details/5
@@ -53,8 +59,8 @@ namespace Brief_Bibliotheque.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Nom,Prenom,DateDeNaissance")] Auteurs auteurs)
+        //[ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([Bind("Id,Nom,Prenom,DateDeNaissance")] Auteur auteurs)
         {
             if (ModelState.IsValid)
             {
@@ -86,7 +92,7 @@ namespace Brief_Bibliotheque.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Nom,Prenom,DateDeNaissance")] Auteurs auteurs)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Nom,Prenom,DateDeNaissance")] Auteur auteurs)
         {
             if (id != auteurs.Id)
             {

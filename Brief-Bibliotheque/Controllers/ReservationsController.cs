@@ -22,7 +22,13 @@ namespace Brief_Bibliotheque.Controllers
         // GET: Reservations
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Reservations.ToListAsync());
+            // Récupérer les Livres et Utilisateurs pour chaque réservation afin de les envoyer à la vue
+            var reservations = await _context.Reservations
+                .Include(l => l.Livre)
+                .Include(l => l.Utilisateur)
+                .ToListAsync();
+
+            return View(reservations);
         }
 
         // GET: Reservations/Details/5
@@ -54,7 +60,7 @@ namespace Brief_Bibliotheque.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,DateReservation,IdUtilisateurs,IdLivres")] Reservations reservations)
+        public async Task<IActionResult> Create([Bind("Id,DateReservation,IdUtilisateurs,IdLivres")] Reservation reservations)
         {
             if (ModelState.IsValid)
             {
@@ -86,7 +92,7 @@ namespace Brief_Bibliotheque.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,DateReservation,IdUtilisateurs,IdLivres")] Reservations reservations)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,DateReservation,IdUtilisateurs,IdLivres")] Reservation reservations)
         {
             if (id != reservations.Id)
             {

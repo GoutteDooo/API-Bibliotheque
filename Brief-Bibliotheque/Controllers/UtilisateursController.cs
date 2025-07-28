@@ -1,12 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Brief_Bibliotheque.Models.Classes;
+using Brief_Bibliotheque.Models.Classes.Enums;
+using Brief_Bibliotheque.Models.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Brief_Bibliotheque.Models.Classes;
-using Brief_Bibliotheque.Models.Data;
+using Microsoft.AspNetCore.Identity;
+using System;
+
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Brief_Bibliotheque.Controllers
 {
@@ -22,7 +25,24 @@ namespace Brief_Bibliotheque.Controllers
         // GET: Utilisateurs
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Utilisateurs.ToListAsync());
+            // On passe chaque utilisateur dans sa ViewModel car on ne veut pas envoyer son mot de passe dans la vue
+            var model = await _context.Utilisateurs
+                .Select(u => new UtilisateurViewModel
+                {
+                    Id = u.Id,
+                    Role = u.Role,
+                    Nom = u.Nom,
+                    Prenom = u.Prenom,
+                    DateDeNaissance = u.DateDeNaissance,
+                    Mail = u.Mail,
+                    Tel = u.Tel,
+                    NumeroDeRue = u.NumeroDeRue,
+                    NomDeRue = u.NomDeRue,
+                    Ville = u.Ville,
+                    CodePostal = u.CodePostal,
+                }).ToListAsync();
+
+                return View(model);
         }
 
         // GET: Utilisateurs/Details/5
@@ -46,6 +66,9 @@ namespace Brief_Bibliotheque.Controllers
         // GET: Utilisateurs/Create
         public IActionResult Create()
         {
+            // Cast les rôles dans le ViewBag pour pouvoir les afficher dans la vue
+            ViewBag.Roles = ObtenirViewBagRoles();
+
             return View();
         }
 
@@ -54,15 +77,19 @@ namespace Brief_Bibliotheque.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Tel,NumeroDeRue,NomDeRue,Role,MotDePasse,Mail,Ville,CodePostal,Nom,Prenom,DateDeNaissance")] Utilisateurs utilisateurs)
+        public async Task<IActionResult> Create([Bind("Id,Tel,NumeroDeRue,NomDeRue,Role,MotDePasse,Mail,Ville,CodePostal,Nom,Prenom,DateDeNaissance")] Utilisateur utilisateur)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(utilisateurs);
+                // Hacher le mdp donné par l'utilisateur
+                var hasher = new PasswordHasher<Utilisateur>();
+                utilisateur.MotDePasse = hasher.HashPassword(utilisateur, utilisateur.MotDePasse);
+
+                _context.Add(utilisateur);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(utilisateurs);
+            return View(utilisateur);
         }
 
         // GET: Utilisateurs/Edit/5
@@ -74,6 +101,9 @@ namespace Brief_Bibliotheque.Controllers
             }
 
             var utilisateurs = await _context.Utilisateurs.FindAsync(id);
+
+            ViewBag.Roles = ObtenirViewBagRoles();
+
             if (utilisateurs == null)
             {
                 return NotFound();
@@ -86,9 +116,9 @@ namespace Brief_Bibliotheque.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Tel,NumeroDeRue,NomDeRue,Role,MotDePasse,Mail,Ville,CodePostal,Nom,Prenom,DateDeNaissance")] Utilisateurs utilisateurs)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Tel,NumeroDeRue,NomDeRue,Role,MotDePasse,Mail,Ville,CodePostal,Nom,Prenom,DateDeNaissance")] Utilisateur utilisateur)
         {
-            if (id != utilisateurs.Id)
+            if (id != utilisateur.Id)
             {
                 return NotFound();
             }
@@ -97,12 +127,12 @@ namespace Brief_Bibliotheque.Controllers
             {
                 try
                 {
-                    _context.Update(utilisateurs);
+                    _context.Update(utilisateur);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!UtilisateursExists(utilisateurs.Id))
+                    if (!UtilisateursExists(utilisateur.Id))
                     {
                         return NotFound();
                     }
@@ -113,7 +143,7 @@ namespace Brief_Bibliotheque.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(utilisateurs);
+            return View(utilisateur);
         }
 
         // GET: Utilisateurs/Delete/5
@@ -152,6 +182,20 @@ namespace Brief_Bibliotheque.Controllers
         private bool UtilisateursExists(int id)
         {
             return _context.Utilisateurs.Any(e => e.Id == id);
+        }
+
+        /**
+         * Retourne les rôles de la classe enum Role pour l'affichage en liste déroulante avec <select></select>
+         */
+        private static List<SelectListItem> ObtenirViewBagRoles()
+        {
+            return Enum.GetValues(typeof(Role)) // Obtient l'array suivant : Array { Role.Membre, Role.Employe, Role.Administrateur }
+                .Cast<Role>() // Convertir chaque élément de l'array en type Role (sinon object par défaut) => IEnumarable<Role>
+                .Select(r => new SelectListItem // Pour chaque Role r, on crée un nouvel object SelectListItem contenant : 
+                {
+                    Value = ((int)r).ToString(), // la valeur envoyée au serveur quand l'utilisateur choisit cette option (conversion en entier puis en chaîne)
+                    Text = r.ToString() // le texte affiché à l'écran dans la balise <select> (on récupère le nom textuel de l'enum ; "Membre" par exemple)
+                }).ToList();
         }
     }
 }
