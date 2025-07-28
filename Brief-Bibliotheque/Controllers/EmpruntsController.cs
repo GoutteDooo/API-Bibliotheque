@@ -81,8 +81,10 @@ namespace Brief_Bibliotheque.Controllers
                 {
                     // Si c'est le cas, aller retrouver la réservation associée
                     var reservation = _context.Reservations.FirstOrDefaultAsync(r => r.IdLivre == livre.Id);
+                    // Si réservation non trouvée, on annule la réservation
                     if (reservation == null) return Problem("Le livre est réservé, mais la réservation n'a pas été trouvée...");
 
+                    // Si la réservation a été trouvée,
                     // Vérifier si l'id réservateur est différent de l'id de l'emprunteur
                     Console.WriteLine("RESERVATION : " + reservation);
                 }
@@ -218,29 +220,33 @@ namespace Brief_Bibliotheque.Controllers
         public async Task<IActionResult> Rendre(int id)
         {
             var emprunt = await _context.Emprunts.FindAsync(id);
+            if (emprunt == null) return Problem("Emprunt non trouvé!");
+            // Trouver le livre associé
+            var livreEmprunte = await _context.Livres.FirstOrDefaultAsync(l => l.Id == emprunt.IdLivre);
+            if (livreEmprunte == null) return Problem("Livre non trouvé !");
 
-            if (emprunt != null)
+            livreEmprunte.EstEmprunte = false;
+            livreEmprunte.EstDisponible = true;
+            emprunt.EstRendu = true;
+
+            try
             {
-                emprunt.EstRendu = true;
-                try
-                {
-                    _context.Update(emprunt);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!EmpruntsExists(emprunt.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                _context.Update(emprunt);
+                _context.Update(livreEmprunte);
+                await _context.SaveChangesAsync();
             }
-            return View(emprunt);
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!EmpruntsExists(emprunt.Id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            return RedirectToAction(nameof(Index));
         }
 
         private bool EmpruntsExists(int id)
