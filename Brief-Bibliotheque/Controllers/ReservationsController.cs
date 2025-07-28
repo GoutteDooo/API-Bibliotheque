@@ -60,7 +60,7 @@ namespace Brief_Bibliotheque.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,DateReservation,IdUtilisateur,IdLivre")] Reservation reservation)
+        public async Task<IActionResult> Create([Bind("Id,DateReservation,EstTermine,IdUtilisateur,IdLivre")] Reservation reservation)
         {
             Console.WriteLine("POST OK");
 
@@ -76,6 +76,7 @@ namespace Brief_Bibliotheque.Controllers
                 {
                     Id = reservation.Id,
                     DateReservation = reservation.DateReservation,
+                    EstTermine = false,
                     IdUtilisateur = utilisateur.Id,
                     Utilisateur = utilisateur,
                     IdLivre = livre.Id,
@@ -110,7 +111,7 @@ namespace Brief_Bibliotheque.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,DateReservation,IdUtilisateur,IdLivre")] Reservation reservation)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,DateReservation,EstTermine,IdUtilisateur,IdLivre")] Reservation reservation)
         {
             if (id != reservation.Id)
             {
