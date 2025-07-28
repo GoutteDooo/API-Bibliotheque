@@ -32,7 +32,6 @@ namespace Brief_Bibliotheque
                         Email = "moneamil@hotmail.com",
                         Url = new Uri("https://test.com"),
                     }
-
                 });
             });
 
