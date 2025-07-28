@@ -29,10 +29,10 @@ namespace Brief_Bibliotheque.Controllers.API
         }
 
         // Récupère tous les auteurs avec l'id
+        [HttpGet("{id}")]
         [SwaggerOperation(Summary = "Récupère un auteur par son ID")]
         [SwaggerResponse(200, "Succès", typeof(Auteur))]
         [SwaggerResponse(404, "Auteur non trouvé")]
-        [HttpGet("{id}")]
         public async Task<ActionResult<Auteur>> GetAuteur(int id)
         {
             var auteur = await _context.Auteurs.FindAsync(id);

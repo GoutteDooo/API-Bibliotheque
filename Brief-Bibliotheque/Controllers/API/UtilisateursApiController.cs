@@ -4,6 +4,7 @@ using Brief_Bibliotheque.Models.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.EntityFrameworkCore;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace Brief_Bibliotheque.Controllers.API
 {
@@ -20,6 +21,8 @@ namespace Brief_Bibliotheque.Controllers.API
 
         // Récupérer tous les utilisateurs
         [HttpGet]
+        [SwaggerOperation(Summary = "Récupère la liste de tous les utilisateurs")]
+        [SwaggerResponse(200, "Succès", typeof(IEnumerable<Auteur>))]
         public async Task<ActionResult<IEnumerable<Utilisateur>>> GetUtilisateurs()
         {
             return await _context.Utilisateurs.ToListAsync();
@@ -27,6 +30,9 @@ namespace Brief_Bibliotheque.Controllers.API
 
         // Récupére tous les utilisateurs avec l'id
         [HttpGet("{id}")]
+        [SwaggerOperation(Summary = "Récupère un utilisateur par son ID")]
+        [SwaggerResponse(200, "Succès", typeof(Auteur))]
+        [SwaggerResponse(404, "Utilisateur non trouvé")]
         public async Task<ActionResult<Utilisateur>> GetUtilisateur(int id)
         {
             var utilisateur = await _context.Utilisateurs.FindAsync(id);
@@ -41,6 +47,8 @@ namespace Brief_Bibliotheque.Controllers.API
 
         // Créer un utilisateur
         [HttpPost]
+        [SwaggerOperation(Summary = "Créer un nouveau utilisateur")]
+        [SwaggerResponse(200, "Succès", typeof(Auteur))]
         public async Task<ActionResult<Utilisateur>> PostUtilisateur(Utilisateur utilisateur)
         {
             _context.Utilisateurs.Add(utilisateur);
@@ -51,6 +59,9 @@ namespace Brief_Bibliotheque.Controllers.API
 
         // Modifier les données d'un utilisateur
         [HttpPut("{id}")]
+        [SwaggerOperation(Summary = "Modifier un utilisateur par son ID")]
+        [SwaggerResponse(200, "Succès", typeof(Auteur))]
+        [SwaggerResponse(404, "Utilisateur non trouvé")]
         public async Task<ActionResult<Utilisateur>> PutUtilisateur (int id , Utilisateur utilisateur)
         {
             if (id != utilisateur.Id)
@@ -72,6 +83,9 @@ namespace Brief_Bibliotheque.Controllers.API
 
         // Supprimer un utilisateur
         [HttpDelete("{id}")]
+        [SwaggerOperation(Summary = "Supprimer un utilisateur par son ID")]
+        [SwaggerResponse(200, "Succès", typeof(Auteur))]
+        [SwaggerResponse(404, "Utilisateur non trouvé")]
         public async Task<ActionResult<Utilisateur>> DeleteUtilisateur (int id)
         {
             var utilisateur = await _context.Utilisateurs.FindAsync(id);

@@ -4,6 +4,7 @@ using Brief_Bibliotheque.Models.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.EntityFrameworkCore;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace Brief_Bibliotheque.Controllers.API
 {
@@ -20,6 +21,8 @@ namespace Brief_Bibliotheque.Controllers.API
 
         // Récupère toutes les réservations
         [HttpGet]
+        [SwaggerOperation(Summary = "Récupère la liste de tous les réservations")]
+        [SwaggerResponse(200, "Succès", typeof(IEnumerable<Auteur>))]
         public async Task<ActionResult<IEnumerable<Reservation>>> GetReservations()
         {
             return await _context.Reservations.ToListAsync();
@@ -27,6 +30,9 @@ namespace Brief_Bibliotheque.Controllers.API
 
         // Récupère toutes les réservations avec l'id
         [HttpGet("{id}")]
+        [SwaggerOperation(Summary = "Récupère un réservation par son ID")]
+        [SwaggerResponse(200, "Succès", typeof(Auteur))]
+        [SwaggerResponse(404, "Réservation non trouvé")]
         public async Task<ActionResult<Reservation>> GetReservation(int id)
         {
             var reservation = await _context.Reservations.FindAsync(id);
@@ -41,6 +47,8 @@ namespace Brief_Bibliotheque.Controllers.API
 
         // Créer une nouvelle réservation
         [HttpPost]
+        [SwaggerOperation(Summary = "Créer un nouvelle réservation")]
+        [SwaggerResponse(200, "Succès", typeof(Auteur))]
         public async Task<ActionResult<Reservation>> PostReservation(Reservation reservation)
         {
             _context.Reservations.Add(reservation);
@@ -51,6 +59,9 @@ namespace Brief_Bibliotheque.Controllers.API
 
         // Modifier une réservation
         [HttpPut("{id}")]
+        [SwaggerOperation(Summary = "Modifier une réservation par son ID")]
+        [SwaggerResponse(200, "Succès", typeof(Auteur))]
+        [SwaggerResponse(404, "Réservation non trouvé")]
         public async Task<ActionResult<Reservation>> PutReservation (int id, Reservation reservation)
         {
             if (id != reservation.Id)
@@ -72,6 +83,9 @@ namespace Brief_Bibliotheque.Controllers.API
 
         // Supprimer une réservation
         [HttpDelete("{id}")]
+        [SwaggerOperation(Summary = "Supprimer une réservation par son ID")]
+        [SwaggerResponse(200, "Succès", typeof(Auteur))]
+        [SwaggerResponse(404, "Réservation non trouvé")]
         public async Task<ActionResult<Reservation>> DeleteReservation(int id)
         {
             var reservation = await _context.Reservations.FindAsync(id);
