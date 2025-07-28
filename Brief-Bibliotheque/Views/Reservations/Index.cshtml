@@ -19,6 +19,12 @@
                 @Html.DisplayNameFor(model => model.DateReservation)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.DateFinReservation)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EstTermine)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.IdUtilisateur)
             </th>
             <th>
@@ -42,6 +48,12 @@
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.DateReservation)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateFinReservation)
+                </td>
+                <td>
+                    <p class="badge @(item.EstTermine == true ? "bg-black" : "bg-danger")">@(item.EstTermine == true ? "Terminé" : "En cours")</p>
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.IdUtilisateur)
