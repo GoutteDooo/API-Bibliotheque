@@ -80,16 +80,22 @@ namespace Brief_Bibliotheque.Controllers
                 if (livre.EstReserve)
                 {
                     // Si c'est le cas, aller retrouver la réservation associée
-                    var reservation = _context.Reservations.FirstOrDefaultAsync(r => r.IdLivre == livre.Id);
+                    var reservation = await _context.Reservations.FirstOrDefaultAsync(r => r.IdLivre == livre.Id);
                     // Si réservation non trouvée, on annule la réservation
                     if (reservation == null) return Problem("Le livre est réservé, mais la réservation n'a pas été trouvée...");
 
                     // Si la réservation a été trouvée,
                     // Vérifier si l'id réservateur est différent de l'id de l'emprunteur
-                    Console.WriteLine("RESERVATION : " + reservation);
+                    if (reservation.IdUtilisateur != utilisateur.Id) return Problem("Une réservation existe déjà pour un autre utilisateur !");
+                    // Si c'est le cas, annuler l'emprunt
                 }
-                // Si c'est le cas, annuler l'emprunt
-                // Sinon, c'est tout bon
+                // Sinon c'est tout bon, le livre est disponible
+
+                // Modifier les propriétés EstEmprunte et EstDisponible du livre.
+                // EstReserve est automatiquement reset sur false
+                livre.EstDisponible = false;
+                livre.EstEmprunte = true;
+                livre.EstReserve = false;
 
                 var emprunt = new Emprunt
                 {
