@@ -52,6 +52,29 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.EstDisponible)
         </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Auteurs)
+        </dt>
+        <dd class="col-sm-10">
+            @foreach (var auteur in Model.Auteurs)
+            {
+                <span> @auteur.Nom @auteur.Prenom </span>
+                <br />
+            }
+            @* @Html.DisplayFor(model => model.Auteurs) *@
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Genres)
+        </dt>
+        <dd class="col-sm-10">
+            @foreach (var auteur in Model.Genres)
+            {
+                <span> @auteur.NomGenre </span>
+                <br />
+            }
+            @* @Html.DisplayFor(model => model.Auteurs) *@
+        </dd>
+
     </dl>
 </div>
 <div>

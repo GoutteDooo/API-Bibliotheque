@@ -21,10 +21,10 @@ namespace Brief_Bibliotheque
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo
+                c.SwaggerDoc("vA", new OpenApiInfo
                 {
                     Title = "Biblio API",
-                    Version = "v1",
+                    Version = "vA",
                     Description = "Une API pour une biblio",
                     Contact = new OpenApiContact
                     {
