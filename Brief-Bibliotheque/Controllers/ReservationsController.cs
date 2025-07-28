@@ -62,13 +62,18 @@ namespace Brief_Bibliotheque.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,DateReservation,EstTermine,IdUtilisateur,IdLivre")] Reservation reservation)
         {
-            Console.WriteLine("POST OK");
-
             var livre = await _context.Livres.FirstOrDefaultAsync(l => l.Id == reservation.IdLivre);
             var utilisateur = await _context.Utilisateurs.FirstOrDefaultAsync(u => u.Id == reservation.IdUtilisateur);
 
             if (livre == null) return Problem("Livre non trouvé :(");
             if (utilisateur == null) return Problem("Membre non trouvé :(");
+
+            // Vérifier si le livre est déjà réservé
+            if (livre.EstReserve) return Problem("Livre déjà réservé!");
+
+            // Sinon, set sa propriété EstReserve sur true
+            livre.EstReserve = true;
+            livre.EstDisponible = false;
 
             if (ModelState.IsValid)
             {
@@ -165,10 +170,29 @@ namespace Brief_Bibliotheque.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var reservation = await _context.Reservations.FindAsync(id);
-            if (reservation != null)
+
+            if (reservation == null) return Problem("Réservation non trouvée!");
+
+            // Trouver le livre réservé
+            var livre = await _context.Livres.FindAsync(reservation.IdLivre);
+
+            // Si livre n'est pas trouvé, pas grave, on supprime qd même la réservation
+            if (livre == null)
             {
                 _context.Reservations.Remove(reservation);
+
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
             }
+            //Sinon,
+
+            // Reset la propriété EstReserve du livre sur false
+            livre.EstReserve = false;
+            // Et si le livre n'est pas emprunté, le mettre disponible
+            if (!reservation.Livre.EstEmprunte)
+                reservation.Livre.EstDisponible = true;
+
+            _context.Reservations.Remove(reservation);
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
