@@ -28,6 +28,26 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.DateDeNaissance)
         </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Livres)
+        </dt>
+        <dd class="col-sm-10">
+            @{
+                var livresTries = Model.Livres.OrderBy(l => l.AnneePublication).ToList();
+            }
+            @foreach (var livre in livresTries)
+            {
+                if (livre.EstDisponible == true){
+                <span> @livre.AnneePublication @livre.Titre, Disponible</span>
+                    <br />
+                }
+                else if (livre.EstEmprunte || livre.EstReserve)
+                {
+                    <span> @livre.AnneePublication @livre.Titre, Indisponible </span>
+                    <br />
+                }
+            }
+        </dd>
     </dl>
 </div>
 <div>
