@@ -41,8 +41,8 @@ namespace Brief_Bibliotheque
                 app.UseSwagger();
                 app.UseSwaggerUI(c =>
                 {
-                    c.SwaggerEndpoint("/swagger/vA/swagger.json", "Biblio API V1");
-                    c.RoutePrefix = "";
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Biblio API V1");
+                    c.RoutePrefix = "swagger";
                 });
             }
 
