@@ -121,6 +121,9 @@ namespace Brief_Bibliotheque.Controllers
         }
 
         // GET: Emprunts/Edit/5
+        /**
+         * Cette méthode Edit n'édite que la date d'emprunt (ajoute 7 jours), car c'est la seule donnée pertinente à pouvoir être éditée
+         */
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -136,6 +139,16 @@ namespace Brief_Bibliotheque.Controllers
 
             // Appliquer le prolongement du prêt
             emprunt.RetourEmprunt = emprunt.RetourEmprunt.AddDays(7);
+            // Si l'emprunt a été réservé par un tier, prolonger également la date de réservation
+            var reservation = await _context.Reservations.FirstOrDefaultAsync(r => r.IdLivre == emprunt.IdLivre && !r.EstTermine);
+            // Si une réservation correspondante a été trouvée, alors prolonger DateFinReservation de 7 jours
+            if (reservation != null)
+            {
+                Console.WriteLine("Reservation dateFin avant : " + reservation.DateFinReservation);
+                reservation.DateFinReservation = reservation.DateFinReservation.AddDays(7);
+                Console.WriteLine("Reservation dateFin après : " + reservation.DateFinReservation);
+                _context.Update(reservation);
+            }
 
             try
             {
