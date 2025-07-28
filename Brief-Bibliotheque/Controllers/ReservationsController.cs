@@ -81,10 +81,28 @@ namespace Brief_Bibliotheque.Controllers
 
             if (ModelState.IsValid)
             {
+                // -- Pour la date de fin de réservation --
+                // Si le livre n'est pas emprunté, DateFinReservation se cale sur DateReservation + 7 jours
+                var dateReservation = DateTime.Now.AddDays(7);
+                if (livre.EstEmprunte)
+                {
+                    // Si le livre réservé est déjà emprunté, DateFinReservation se cale sur la date de retour emprunt + 7 jours.
+                    var retourEmprunt = await _context.Emprunts.FirstOrDefaultAsync(e => e.IdLivre == livre.Id && !e.EstRendu);
+                    if (retourEmprunt != null)
+                    {
+                        dateReservation = retourEmprunt.RetourEmprunt.AddDays(7);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Erreur lors de la recherche de l'emprunt. Date de fin de réservation n'est pas reset.");
+                    }
+                }
+
                 var newReservation = new Reservation
                 {
                     Id = reservation.Id,
                     DateReservation = reservation.DateReservation,
+                    DateFinReservation = dateReservation,
                     EstTermine = false,
                     IdUtilisateur = utilisateur.Id,
                     Utilisateur = utilisateur,
@@ -120,7 +138,7 @@ namespace Brief_Bibliotheque.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,DateReservation,EstTermine,IdUtilisateur,IdLivre")] Reservation reservation)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,DateReservation,DateFinReservation,EstTermine,IdUtilisateur,IdLivre")] Reservation reservation)
         {
             if (id != reservation.Id)
             {
