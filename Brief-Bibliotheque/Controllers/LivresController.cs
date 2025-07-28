@@ -1,12 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Brief_Bibliotheque.Models;
+using Brief_Bibliotheque.Models.Classes;
+using Brief_Bibliotheque.Models.Data;
+using Humanizer.Localisation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Brief_Bibliotheque.Models.Classes;
-using Brief_Bibliotheque.Models.Data;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Brief_Bibliotheque.Controllers
 {
@@ -23,35 +25,40 @@ namespace Brief_Bibliotheque.Controllers
         /**
          * Affiche les détails du livre recherché s'il existe, sinon retourne une erreur 404
          */
-        public async Task<IActionResult> Index(string? recherche)
+        public async Task<IActionResult> Index(string? recherche, string? genre)
         {
             if (_context.Livres == null) return Problem("Aucun livre dans la base de données");
 
             Console.BackgroundColor = ConsoleColor.Red;
             Console.WriteLine("RECHERCHE : " + recherche);
-            if (string.IsNullOrEmpty(recherche))
+
+            // Récupérer les livres avec leurs auteurs et genres
+            var query = _context.Livres
+                .Include(l => l.Auteurs)
+                .Include(l => l.Genres)
+                .AsQueryable();
+
+
+            if (!string.IsNullOrEmpty(recherche))
             {
-                // Récupérer les livres avec leurs auteurs et genres
-                var livres = await _context.Livres
-                    .Include(l => l.Auteurs)
-                    .Include(l => l.Genres)
-                    .ToListAsync();
 
-                return View(livres);
+                query = query.Where(l => l.Titre.ToUpper().Contains(recherche.ToUpper()));
+
             }
-            // Si la recherche n'est pas nulle ou vide
-            else
+
+            if (!string.IsNullOrEmpty(genre))
             {
-                var livres = await _context.Livres
-                    .Include(l => l.Auteurs)
-                    .Include(l => l.Genres)
-                    .Where(l => l.Titre!.ToUpper().Contains(recherche.ToUpper()))
-                    .ToListAsync();
+                query = query.Where(l => l.Genres.Any(g => g.NomGenre.ToUpper().Contains(genre.ToUpper())));
 
-                if (livres == null) return Problem("Le livre recherché n'existe pas :(");
-
-                return View(livres);
             }
+            var livres = await query.ToListAsync();
+
+            if (!livres.Any() && (!string.IsNullOrEmpty(recherche) || !string.IsNullOrEmpty(genre)))
+            {
+                return Problem("Le livre recherché n'existe pas :(");
+            }
+
+            return View(livres);
         }
 
         // GET: Livres/Details/5
