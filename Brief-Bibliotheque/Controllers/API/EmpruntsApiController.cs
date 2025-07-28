@@ -17,12 +17,14 @@ namespace Brief_Bibliotheque.Controllers.API
             _context = context;
         }
 
+        // Récupère tous les emprunts en cours
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Emprunt>>> GetEmprunts()
         {
             return await _context.Emprunts.ToListAsync();
         }
 
+        // Récupère les emprunts en cours avec l'id
         [HttpGet("{id}")]
         public async Task<ActionResult<Emprunt>> GetEmprunt(int id)
         {
@@ -36,6 +38,7 @@ namespace Brief_Bibliotheque.Controllers.API
             return emprunt;
         }
 
+        // Créer un emprunt
         [HttpPost]
         public async Task<ActionResult<Emprunt>> PostEmprunt(Emprunt emprunt)
         {
@@ -45,6 +48,7 @@ namespace Brief_Bibliotheque.Controllers.API
             return CreatedAtAction(nameof(GetEmprunt), new { id = emprunt.Id }, emprunt);
         }
 
+        // Modifier un emprunt
         [HttpPut("{id}")]
         public async Task<ActionResult<Emprunt>> PutEmprunt(int id, Emprunt emprunt)
         {
@@ -64,6 +68,7 @@ namespace Brief_Bibliotheque.Controllers.API
             return NoContent();
         }
 
+        // Supprimer un emprunt
         [HttpDelete("{id}")]
         public async Task<ActionResult<Emprunt>> DeleteEmprunt(int id)
         {

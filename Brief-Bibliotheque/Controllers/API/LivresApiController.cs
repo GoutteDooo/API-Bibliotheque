@@ -15,11 +15,15 @@ namespace Brief_Bibliotheque.Controllers.API
         {
             _context = context;
         }
+
+        // Récupère tous les livres disponibles
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Livre>>> GetLivres()
         {
             return await _context.Livres.ToListAsync();
         }
+
+        // Récupère le livre avec son ID
         [HttpGet("{id}")]
         public async Task<ActionResult<Livre>> GetLivres(int id)
         {
@@ -32,6 +36,8 @@ namespace Brief_Bibliotheque.Controllers.API
 
             return livre;
         }
+
+        // Créer un nouveau livre
         [HttpPost]
         public async Task<ActionResult<Livre>> PostAuteur(Livre livre)
         {
@@ -40,6 +46,8 @@ namespace Brief_Bibliotheque.Controllers.API
 
             return CreatedAtAction(nameof(GetLivres), new { id = livre.Id }, livre);
         }
+
+        // Modifier les informations a un livre
         [HttpPut("{id}")]
         public async Task<IActionResult> PutLivre(int id, Livre livre)
         {
@@ -58,6 +66,8 @@ namespace Brief_Bibliotheque.Controllers.API
             }
             return NoContent();
         }
+
+        // Supprimer un livre
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteLivre(int id)
         {

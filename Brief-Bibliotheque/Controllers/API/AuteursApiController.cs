@@ -16,6 +16,8 @@ namespace Brief_Bibliotheque.Controllers.API
         {
             _context = context;
         }
+
+        // Récupère tous les auteurs disponibles
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Auteur>>> GetAuteurs()
         {
@@ -33,6 +35,8 @@ namespace Brief_Bibliotheque.Controllers.API
 
             return auteur;
         }
+
+        // Récupère tous les auteurs avec l'id
         [HttpPost]
         public async Task<ActionResult<Auteur>> PostAuteur(Auteur auteur)
         {
@@ -41,6 +45,8 @@ namespace Brief_Bibliotheque.Controllers.API
 
             return CreatedAtAction(nameof(GetAuteur), new { id = auteur.Id }, auteur);
         }
+
+        // Créer un nouvel auteur
         [HttpPut("{id}")]
         public async Task<IActionResult> PutAuteur(int id, Auteur auteur)
         {
@@ -59,6 +65,8 @@ namespace Brief_Bibliotheque.Controllers.API
             }
             return NoContent();
         }
+
+        // Supprimer un auteur
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAuteur(int id)
         {
