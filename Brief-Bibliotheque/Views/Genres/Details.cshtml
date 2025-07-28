@@ -15,6 +15,9 @@
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.NomGenre)
+            <a asp-controller="Livres" asp-action="Index" asp-route-genre="@Model.NomGenre" class="text-primary ms-3">
+                Plus d'infos
+            </a>
         </dd>
     </dl>
 </div>
