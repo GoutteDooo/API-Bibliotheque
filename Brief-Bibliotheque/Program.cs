@@ -21,10 +21,10 @@ namespace Brief_Bibliotheque
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("vA", new OpenApiInfo
+                c.SwaggerDoc("v1", new OpenApiInfo
                 {
                     Title = "Biblio API",
-                    Version = "vA",
+                    Version = "v1",
                     Description = "Une API pour une biblio",
                     Contact = new OpenApiContact
                     {
@@ -42,7 +42,7 @@ namespace Brief_Bibliotheque
                 app.UseSwagger();
                 app.UseSwaggerUI(c =>
                 {
-                    c.SwaggerEndpoint("/swagger/vA/swagger.json", "Biblio API V1");
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Biblio API V1");
                     c.RoutePrefix = "";
                 });
             }
