@@ -87,7 +87,9 @@ namespace Brief_Bibliotheque.Controllers
                     // Si la réservation a été trouvée,
                     // Vérifier si l'id réservateur est différent de l'id de l'emprunteur
                     if (reservation.IdUtilisateur != utilisateur.Id) return Problem("Une réservation existe déjà pour un autre utilisateur !");
-                    // Si c'est le cas, annuler l'emprunt et set la reservation
+                    // Si c'est le cas, annuler l'emprunt
+                    // Sinon, terminer la réservation
+                    reservation.EstTermine = true;
                 }
                 // Sinon c'est tout bon, le livre est disponible
 
