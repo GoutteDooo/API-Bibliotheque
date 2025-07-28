@@ -22,7 +22,7 @@ namespace Brief_Bibliotheque.Controllers.API
         // Récupère tous les genres disponibles
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Genre>>> GetGenres()
-        {
+        { 
             return await _context.Genres.ToListAsync();
         }
 
