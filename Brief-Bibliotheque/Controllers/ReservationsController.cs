@@ -52,7 +52,11 @@ namespace Brief_Bibliotheque.Controllers
         // GET: Reservations/Create
         public IActionResult Create()
         {
-            return View();
+            var reservation = new Reservation
+            {
+                DateReservation = DateTime.Now,
+            };
+            return View(reservation);
         }
 
         // POST: Reservations/Create
@@ -60,15 +64,57 @@ namespace Brief_Bibliotheque.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,DateReservation,IdUtilisateurs,IdLivres")] Reservation reservations)
+        public async Task<IActionResult> Create([Bind("Id,DateReservation,EstTermine,IdUtilisateur,IdLivre")] Reservation reservation)
         {
+            var livre = await _context.Livres.FirstOrDefaultAsync(l => l.Id == reservation.IdLivre);
+            var utilisateur = await _context.Utilisateurs.FirstOrDefaultAsync(u => u.Id == reservation.IdUtilisateur);
+
+            if (livre == null) return Problem("Livre non trouvé :(");
+            if (utilisateur == null) return Problem("Membre non trouvé :(");
+
+            // Vérifier si le livre est déjà réservé
+            if (livre.EstReserve) return Problem("Livre déjà réservé!");
+
+            // Sinon, set sa propriété EstReserve sur true
+            livre.EstReserve = true;
+            livre.EstDisponible = false;
+
             if (ModelState.IsValid)
             {
-                _context.Add(reservations);
+                // -- Pour la date de fin de réservation --
+                // Si le livre n'est pas emprunté, DateFinReservation se cale sur DateReservation + 7 jours
+                var dateReservation = DateTime.Now.AddDays(7);
+                if (livre.EstEmprunte)
+                {
+                    // Si le livre réservé est déjà emprunté, DateFinReservation se cale sur la date de retour emprunt + 7 jours.
+                    var retourEmprunt = await _context.Emprunts.FirstOrDefaultAsync(e => e.IdLivre == livre.Id && !e.EstRendu);
+                    if (retourEmprunt != null)
+                    {
+                        dateReservation = retourEmprunt.RetourEmprunt.AddDays(7);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Erreur lors de la recherche de l'emprunt. Date de fin de réservation n'est pas reset.");
+                    }
+                }
+
+                var newReservation = new Reservation
+                {
+                    Id = reservation.Id,
+                    DateReservation = reservation.DateReservation,
+                    DateFinReservation = dateReservation,
+                    EstTermine = false,
+                    IdUtilisateur = utilisateur.Id,
+                    Utilisateur = utilisateur,
+                    IdLivre = livre.Id,
+                    Livre = livre
+                };
+
+                _context.Add(newReservation);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(reservations);
+            return View(reservation);
         }
 
         // GET: Reservations/Edit/5
@@ -79,12 +125,12 @@ namespace Brief_Bibliotheque.Controllers
                 return NotFound();
             }
 
-            var reservations = await _context.Reservations.FindAsync(id);
-            if (reservations == null)
+            var reservation = await _context.Reservations.FindAsync(id);
+            if (reservation == null)
             {
                 return NotFound();
             }
-            return View(reservations);
+            return View(reservation);
         }
 
         // POST: Reservations/Edit/5
@@ -92,9 +138,9 @@ namespace Brief_Bibliotheque.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,DateReservation,IdUtilisateurs,IdLivres")] Reservation reservations)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,DateReservation,DateFinReservation,EstTermine,IdUtilisateur,IdLivre")] Reservation reservation)
         {
-            if (id != reservations.Id)
+            if (id != reservation.Id)
             {
                 return NotFound();
             }
@@ -103,12 +149,12 @@ namespace Brief_Bibliotheque.Controllers
             {
                 try
                 {
-                    _context.Update(reservations);
+                    _context.Update(reservation);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ReservationsExists(reservations.Id))
+                    if (!ReservationsExists(reservation.Id))
                     {
                         return NotFound();
                     }
@@ -119,7 +165,7 @@ namespace Brief_Bibliotheque.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(reservations);
+            return View(reservation);
         }
 
         // GET: Reservations/Delete/5
@@ -130,14 +176,14 @@ namespace Brief_Bibliotheque.Controllers
                 return NotFound();
             }
 
-            var reservations = await _context.Reservations
+            var reservation = await _context.Reservations
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (reservations == null)
+            if (reservation == null)
             {
                 return NotFound();
             }
 
-            return View(reservations);
+            return View(reservation);
         }
 
         // POST: Reservations/Delete/5
@@ -145,11 +191,30 @@ namespace Brief_Bibliotheque.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var reservations = await _context.Reservations.FindAsync(id);
-            if (reservations != null)
+            var reservation = await _context.Reservations.FindAsync(id);
+
+            if (reservation == null) return Problem("Réservation non trouvée!");
+
+            // Trouver le livre réservé
+            var livre = await _context.Livres.FindAsync(reservation.IdLivre);
+
+            // Si livre n'est pas trouvé, pas grave, on supprime qd même la réservation
+            if (livre == null)
             {
-                _context.Reservations.Remove(reservations);
+                _context.Reservations.Remove(reservation);
+
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
             }
+            //Sinon,
+
+            // Reset la propriété EstReserve du livre sur false
+            livre.EstReserve = false;
+            // Et si le livre n'est pas emprunté, le mettre disponible
+            if (!reservation.Livre.EstEmprunte)
+                reservation.Livre.EstDisponible = true;
+
+            _context.Reservations.Remove(reservation);
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

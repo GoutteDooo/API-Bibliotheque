@@ -300,6 +300,8 @@ public static class SeedData
             var reservation = new Reservation
             {
                 DateReservation = DateTime.Parse("2025-7-27"),
+                DateFinReservation = DateTime.Parse("2025-8-3"),
+                EstTermine = false,
                 Utilisateur = uBob,
                 IdUtilisateur = uBob.Id,
                 Livre = livreEmprunt,
