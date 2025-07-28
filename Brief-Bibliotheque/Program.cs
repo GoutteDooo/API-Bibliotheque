@@ -21,6 +21,7 @@ namespace Brief_Bibliotheque
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen(c =>
             {
+
                 c.SwaggerDoc("v1", new OpenApiInfo
                 {
                     Title = "Biblio API",
@@ -32,7 +33,9 @@ namespace Brief_Bibliotheque
                         Email = "moneamil@hotmail.com",
                         Url = new Uri("https://test.com"),
                     }
+
                 });
+                c.EnableAnnotations();
             });
 
             var app = builder.Build();
