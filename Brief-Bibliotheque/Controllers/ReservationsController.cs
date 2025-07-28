@@ -52,7 +52,11 @@ namespace Brief_Bibliotheque.Controllers
         // GET: Reservations/Create
         public IActionResult Create()
         {
-            return View();
+            var reservation = new Reservation
+            {
+                DateReservation = DateTime.Now,
+            };
+            return View(reservation);
         }
 
         // POST: Reservations/Create
