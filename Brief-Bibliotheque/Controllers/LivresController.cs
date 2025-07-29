@@ -2,6 +2,7 @@
 using Brief_Bibliotheque.Models.Classes;
 using Brief_Bibliotheque.Models.Data;
 using Humanizer.Localisation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -183,6 +184,7 @@ namespace Brief_Bibliotheque.Controllers
         }
 
         // GET: Livres/Delete/5
+        [Authorize(Roles = "Administrateur")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)

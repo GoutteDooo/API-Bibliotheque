@@ -88,6 +88,12 @@ namespace Brief_Bibliotheque.Controllers
         // GET: Auth/Login
         public IActionResult Login()
         {
+            // Si déjà connecté, rediriger vers l'accueil
+            if (User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
             return View();
         }
 

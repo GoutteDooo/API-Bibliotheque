@@ -35,6 +35,18 @@ namespace Brief_Bibliotheque
                         ValidateAudience = false,
                         ValidateLifetime = true
                     };
+                    options.Events = new JwtBearerEvents
+                    {
+                        OnMessageReceived = context =>
+                        {
+                            // Lire le token depuis le cookie au lieu du header
+                            if (context.Request.Cookies.ContainsKey("jwt-token"))
+                            {
+                                context.Token = context.Request.Cookies["jwt-token"];
+                            }
+                            return Task.CompletedTask;
+                        }
+                    };
                 });
 
             // Enregistrer le service JWT

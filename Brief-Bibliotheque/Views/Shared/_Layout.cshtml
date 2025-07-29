@@ -46,6 +46,33 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="swagger" asp-action="index">Swagger</a>
                         </li>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item">
+                                <span class="navbar-text text-success me-3">
+                                    <i class="fas fa-user"></i> Connecté : <strong>@User.Identity.Name</strong>
+                                    <span class="badge bg-secondary">@User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value</span>
+                                </span>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link btn btn-outline-danger btn-sm" asp-controller="Auth" asp-action="Logout">
+                                    Déconnexion
+                                </a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link btn btn-primary btn-sm" asp-controller="Auth" asp-action="Login">
+                                    Connexion
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link btn btn-outline-primary btn-sm ms-2" asp-controller="Auth" asp-action="Register">
+                                    Inscription
+                                </a>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>
