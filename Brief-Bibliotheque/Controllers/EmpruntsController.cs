@@ -156,7 +156,7 @@ namespace Brief_Bibliotheque.Controllers
             // Appliquer le prolongement du prêt
             emprunt.RetourEmprunt = emprunt.RetourEmprunt.AddDays(7);
             // Si l'emprunt a été réservé par un tier, prolonger également la date de réservation
-            var reservation = await _context.Reservations.FirstOrDefaultAsync(r => r.IdLivre == emprunt.IdLivre && !r.EstTermine);
+            var reservation = await _context.Reservations.FirstOrDefaultAsync(r => r.IdLivre == emprunt.IdLivre && !r.EstTermine && !emprunt.EstRendu);
             // Si une réservation correspondante a été trouvée, alors prolonger DateFinReservation de 7 jours
             if (reservation != null)
             {
