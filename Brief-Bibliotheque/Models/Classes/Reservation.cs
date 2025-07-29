@@ -12,7 +12,7 @@ namespace Brief_Bibliotheque.Models.Classes
         [Display(Name = "Date de fin de réservation")]
         [DataType(DataType.Date)]
         public DateTime DateFinReservation { get; set; }
-        [Display(Name = "Terminé")]
+        [Display(Name = "Etat")]
         public bool EstTermine { get; set; } = false;
         [Display(Name = "ID du Membre")]
         public int IdUtilisateur { get; set; }
