@@ -74,7 +74,17 @@
                             <li class="nav-item">
                                 <span class="navbar-text text-success me-3">
                                     <i class="fas fa-user"></i> Connecté : <strong>@User.Identity.Name</strong>
-                                    <span class="badge bg-secondary">@User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value</span>
+                                    @{
+                                        var role = User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value;
+                                        var badgeClass = role switch
+                                        {
+                                            "Administrateur" => "bg-danger",
+                                            "Membre" => "bg-success",
+                                            "Employé" => "bg-primary",
+                                            _ => "bg-secondary" // fallback
+                                        };
+                                    }
+                                    <span class="badge @badgeClass">@role</span>
                                 </span>
                             </li>
                             <li class="nav-item">
