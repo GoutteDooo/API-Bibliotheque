@@ -1,14 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
+﻿using Brief_Bibliotheque.Handlers;
 using Brief_Bibliotheque.Models.Classes;
 using Brief_Bibliotheque.Models.Data;
 using Brief_Bibliotheque.Services;
-using Brief_Bibliotheque.Handlers;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Brief_Bibliotheque.Controllers
 {
@@ -225,6 +226,60 @@ namespace Brief_Bibliotheque.Controllers
         private bool UtilisateurExists(int id)
         {
             return _context.Utilisateurs.Any(e => e.Id == id);
+        }
+
+        // GET: Auth/ResetPassword
+        [Authorize(Roles = "Administrateur,Employe,Membre")]
+        public IActionResult ResetPassword()
+        {
+            return View();
+        }
+
+        // POST: Auth/ResetPassword
+        [Authorize(Roles = "Administrateur,Employe,Membre")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ResetPassword(string ancienMotDePasse, string nouveauMotDePasse, string confirmerMotDePasse)
+        {
+            // Validation des champs
+            if (string.IsNullOrEmpty(ancienMotDePasse) || string.IsNullOrEmpty(nouveauMotDePasse) || string.IsNullOrEmpty(confirmerMotDePasse))
+            {
+                ViewBag.Error = "Veuillez remplir tous les champs";
+                return View();
+            }
+
+            // Vérifier que les nouveaux mots de passe correspondent
+            if (nouveauMotDePasse != confirmerMotDePasse)
+            {
+                ViewBag.Error = "Les nouveaux mots de passe ne correspondent pas";
+                return View();
+            }
+
+            // Récupérer l'utilisateur connecté
+            var userName = User.Identity.Name;
+            var user = await _context.Utilisateurs.FirstOrDefaultAsync(u => u.Nom == userName);
+
+            if (user == null)
+            {
+                ViewBag.Error = "Utilisateur non trouvé";
+                return View();
+            }
+
+            // Vérifier l'ancien mot de passe
+            if (!PasswordHashHandler.VerifyPassword(ancienMotDePasse, user.MotDePasse))
+            {
+                ViewBag.Error = "L'ancien mot de passe est incorrect";
+                return View();
+            }
+
+            // Hacher et sauvegarder le nouveau mot de passe
+            user.MotDePasse = PasswordHashHandler.HashPassword(nouveauMotDePasse);
+
+            _context.Update(user);
+            await _context.SaveChangesAsync();
+
+            ViewBag.Success = "Mot de passe modifié avec succès !";
+            return View();
         }
     }
 }
