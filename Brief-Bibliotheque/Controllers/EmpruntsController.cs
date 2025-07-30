@@ -1,13 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Brief_Bibliotheque.Models.Classes;
+using Brief_Bibliotheque.Models.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
-using Brief_Bibliotheque.Models.Classes;
-using Brief_Bibliotheque.Models.Data;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace Brief_Bibliotheque.Controllers
 {
@@ -25,19 +26,31 @@ namespace Brief_Bibliotheque.Controllers
         {
             // TODO
             // Récupérer les Emprunts et Utilisateurs pour chaque emprunt afin de les envoyer à la vue
-
-            var query = 
-                //User.IsInRole("Membre") ?
-                //_context.Emprunts
-                //    .Include(e => e.Livre)
-                //    .Include(e => e.Utilisateur)
-                //    .Select(u => u.Id)
-                //    .AsQueryable()
-                //    :
-                _context.Emprunts
+            /*
+            var query = _context.Emprunts
                     .Include(e => e.Livre)
                     .Include(e => e.Utilisateur)
                     .AsQueryable();
+
+            if (User.IsInRole("Membre"))
+            {
+                query = _context.Emprunts
+                    .Include(e => e.Livre)
+                    .Include(e => e.Utilisateur)
+                    .AsQueryable();
+            }
+            */
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            var query = _context.Emprunts
+                    .Include(e => e.Livre)
+                    .Include(e => e.Utilisateur)
+                    .AsQueryable();
+
+            if (User.IsInRole("Membre") && int.TryParse(userId, out int parsedId))
+            {
+                query = query.Where(e => e.IdUtilisateur == parsedId);
+            }
 
             // Filtrer selon le statut si spécifié
             if (enCours.HasValue)
