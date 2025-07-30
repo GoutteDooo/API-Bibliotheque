@@ -1,22 +1,17 @@
 ﻿@model Brief_Bibliotheque.Models.Classes.Utilisateur
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Inscription";
 }
 
-<h1>Create</h1>
+<h1>Inscription</h1>
 
 <h4>Utilisateur</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <form asp-action="Register" asp-controller="Auth" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="UtilisateurId" class="control-label"></label>
-                <input asp-for="UtilisateurId" class="form-control" />
-                <span asp-validation-for="UtilisateurId" class="text-danger"></span>
-            </div>
             <div class="form-group">
                 <label asp-for="Tel" class="control-label"></label>
                 <input asp-for="Tel" class="form-control" />
@@ -34,7 +29,16 @@
             </div>
             <div class="form-group">
                 <label asp-for="Role" class="control-label"></label>
-                <select asp-for="Role" class="form-control"></select>
+                <select asp-for="Role" class="form-control">
+                    <option value="">-- Sélectionnez un rôle --</option>
+                    <option value="Membre">Membre</option>
+
+                    @if (User.IsInRole("Administrateur"))
+                    {
+                        <option value="Employé">Employé</option>
+                        <option value="Administrateur">Administrateur</option>
+                    }
+                </select>
                 <span asp-validation-for="Role" class="text-danger"></span>
             </div>
             <div class="form-group">
