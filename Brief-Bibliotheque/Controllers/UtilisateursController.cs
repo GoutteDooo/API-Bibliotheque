@@ -1,16 +1,17 @@
-﻿using Brief_Bibliotheque.Models.Classes;
+﻿using Brief_Bibliotheque.Handlers;
+using Brief_Bibliotheque.Models.Classes;
 using Brief_Bibliotheque.Models.Classes.Enums;
 using Brief_Bibliotheque.Models.Data;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
 using System;
-using Microsoft.AspNetCore.Authorization;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
-using Brief_Bibliotheque.Handlers;
 
 namespace Brief_Bibliotheque.Controllers
 {
@@ -131,7 +132,26 @@ namespace Brief_Bibliotheque.Controllers
                 return NotFound();
             }
 
-            var utilisateurs = await _context.Utilisateurs.FindAsync(id);
+            // Aller chercher le role du profil utilisateur à éditer
+            var utilisateurAEditer = await _context.Utilisateurs.FindAsync(id);
+
+            if (utilisateurAEditer == null) return NotFound();
+
+            // Si utilisateur est un Employé, il peut éditer les comptes des membres et son propre compte
+            var role = utilisateurAEditer.Role;
+
+            //Récupérer l'id de l'utilisateur
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var estLuiMeme = Convert.ToInt32(userId) == utilisateurAEditer.Id;
+
+            // Vérifie que l'utilisateur est un employé, qu'il ne se sélectionne pas, et que le role est différent de membre
+            // Si c'est le cas : accès non autorisé (édite un admin ou un autre employé)
+            if (User.IsInRole("Employé") && !estLuiMeme && role != Role.Membre)
+            {
+                return Unauthorized();
+            }
+
+            // Si c'est un admin, on ne change rien
 
             if (User.IsInRole("Administrateur"))
                 ViewBag.Roles = ObtenirViewBagRoles(estAdmin:true);
@@ -139,11 +159,7 @@ namespace Brief_Bibliotheque.Controllers
                 ViewBag.Roles = ObtenirViewBagRoles(estAdmin:false);
 
 
-            if (utilisateurs == null)
-            {
-                return NotFound();
-            }
-            return View(utilisateurs);
+            return View(utilisateurAEditer);
         }
 
         // POST: Utilisateurs/Edit/5
