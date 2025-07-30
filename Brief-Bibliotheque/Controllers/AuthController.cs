@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Brief_Bibliotheque.Models.Classes;
 using Brief_Bibliotheque.Models.Data;
 using Brief_Bibliotheque.Services;
+using Brief_Bibliotheque.Handlers;
 
 namespace Brief_Bibliotheque.Controllers
 {
@@ -100,20 +101,23 @@ namespace Brief_Bibliotheque.Controllers
         // POST: Auth/Login
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(string nom, string motDePasse)
+        public async Task<IActionResult> Login(string mail, string motDePasse)
         {
-            if (string.IsNullOrEmpty(nom) || string.IsNullOrEmpty(motDePasse))
+            if (string.IsNullOrEmpty(mail) || string.IsNullOrEmpty(motDePasse))
             {
                 ViewBag.Error = "Veuillez remplir tous les champs";
                 return View();
             }
 
             var user = await _context.Utilisateurs
-                .FirstOrDefaultAsync(u => u.Nom == nom && u.MotDePasse == motDePasse);
+                .FirstOrDefaultAsync(u => u.Mail == mail);
 
-            if (user == null)
+            //if (user is not null) Console.WriteLine("USER MAIL :" + user.Mail);
+            //else Console.WriteLine("USER NON TROUVE");
+
+            if (user == null || !PasswordHashHandler.VerifyPassword(motDePasse, user.MotDePasse))
             {
-                ViewBag.Error = "Nom ou mot de passe incorrect";
+                ViewBag.Error = "Mail ou mot de passe incorrect";
                 return View();
             }
 

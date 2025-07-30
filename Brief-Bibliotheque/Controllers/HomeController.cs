@@ -18,6 +18,12 @@ namespace Brief_Bibliotheque.Controllers
             return View();
         }
 
+        public IActionResult Employe(int id)
+        {
+            return View();
+        }
+
+
         public IActionResult Privacy()
         {
             return View();

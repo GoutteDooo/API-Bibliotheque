@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Linq;
 using Brief_Bibliotheque.Models.Classes;
+using Brief_Bibliotheque.Handlers;
 using Npgsql.Internal;
 namespace Brief_Bibliotheque.Models.Data;
 
@@ -58,7 +59,7 @@ public static class SeedData
                 NumeroDeRue = "22",
                 NomDeRue = "Rue de la Blague",
                 Role = Classes.Enums.Role.Employé,
-                MotDePasse = "ZéroPlusZéro",
+                MotDePasse = PasswordHashHandler.HashPassword("0+0"),
                 Mail = "latete@toto.haha",
                 Ville = "TotoLand",
                 CodePostal = "12345"
@@ -72,7 +73,7 @@ public static class SeedData
                 NumeroDeRue = "22",
                 NomDeRue = "Rue de la Beauté",
                 Role = Classes.Enums.Role.Membre,
-                MotDePasse = "AliceInWonderland",
+                MotDePasse = PasswordHashHandler.HashPassword("AliceInWonderland"),
                 Mail = "alice@test.com",
                 Ville = "Paris",
                 CodePostal = "75001"
@@ -86,7 +87,7 @@ public static class SeedData
                 NumeroDeRue = "17",
                 NomDeRue = "Rue du Travail",
                 Role = Classes.Enums.Role.Membre,
-                MotDePasse = "BobBricoleurLalala",
+                MotDePasse = PasswordHashHandler.HashPassword("bobbricoleur"),
                 Mail = "bob@brico.depot",
                 Ville = "Brico Dépôt",
                 CodePostal = "10000"
@@ -101,7 +102,7 @@ public static class SeedData
                     NumeroDeRue = "11",
                     NomDeRue = "Rue de la paix",
                     Role = Classes.Enums.Role.Administrateur,
-                    MotDePasse = "jeandupooooooont",
+                    MotDePasse = PasswordHashHandler.HashPassword("test1234"),
                     Mail = "jean@dupont.eau",
                     Ville = "Paris",
                     CodePostal = "75001"
@@ -300,7 +301,7 @@ public static class SeedData
             var reservation = new Reservation
             {
                 DateReservation = DateTime.Parse("2025-7-27"),
-                DateFinReservation = DateTime.Parse("2025-8-3"),
+                DateFinReservation = DateTime.Parse("2025-8-17"),
                 EstTermine = false,
                 Utilisateur = uBob,
                 IdUtilisateur = uBob.Id,

@@ -53,14 +53,37 @@ namespace Brief_Bibliotheque.Controllers
                 return NotFound();
             }
 
-            var utilisateurs = await _context.Utilisateurs
+            var utilisateur = await _context.Utilisateurs
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (utilisateurs == null)
+            if (utilisateur == null) return Problem("Utilisateur non trouvé!");
+
+            // Récupérer les emprunts en cours correspondant à l'id de l'utilisateur
+            var emprunts = await _context.Emprunts
+                .Include(e => e.Livre)
+                .Where(e => e.IdUtilisateur == utilisateur.Id && !e.EstRendu)
+                .ToListAsync();
+
+            var utilisateurVM = new UtilisateurViewModel
+            {
+                Role = utilisateur.Role,
+                Nom = utilisateur.Nom,
+                Prenom = utilisateur.Prenom,
+                DateDeNaissance = utilisateur.DateDeNaissance,
+                Mail = utilisateur.Mail,
+                Tel = utilisateur.Tel,
+                NumeroDeRue = utilisateur.NumeroDeRue,
+                NomDeRue = utilisateur.NomDeRue,
+                Ville = utilisateur.Ville,
+                CodePostal = utilisateur.CodePostal,
+                Emprunts = emprunts // si c'est null c'est pas grave, on gère l'affichage
+            };
+
+            if (utilisateurVM == null)
             {
                 return NotFound();
             }
 
-            return View(utilisateurs);
+            return View(utilisateurVM);
         }
 
         // GET: Utilisateurs/Create

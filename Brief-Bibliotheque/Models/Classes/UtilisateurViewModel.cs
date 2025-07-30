@@ -26,5 +26,7 @@ namespace Brief_Bibliotheque.Models.Classes
         public string? Ville { get; set; }
         [Display(Name = "Code Postal")]
         public string? CodePostal { get; set; }
+        [Display(Name = "Emprunts en cours")]
+        public List<Emprunt>? Emprunts { get; set; }
     }
 }
