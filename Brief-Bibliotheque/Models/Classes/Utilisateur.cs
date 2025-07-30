@@ -23,7 +23,7 @@ namespace Brief_Bibliotheque.Models.Classes
         [Required]
         [StringLength(300, MinimumLength = 10, ErrorMessage = "Veuillez saisir un mot de passe contenant plus de 10 caractères svp.")]
         public required string MotDePasse { get; set; }
-        [RegularExpression(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$", ErrorMessage = "L'adresse Mail n'est pas une adresse valide.")]
+        [RegularExpression(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,7})+)$", ErrorMessage = "L'adresse Mail n'est pas une adresse valide.")]
         [StringLength(70, MinimumLength = 9)]
         public required string Mail { get; set; }
         public string? Ville { get; set; }
