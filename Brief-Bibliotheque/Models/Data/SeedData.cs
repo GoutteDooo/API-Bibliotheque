@@ -286,7 +286,7 @@ public static class SeedData
             /* EMPRUNTS */
             var livreEmprunt = context.Livres.First(); // Premier livre de la table Livres
             var utilisateurEmprunt = context.Utilisateurs.First(); // Premier Utilisatuer de la table Utilisateurs
-            var emprunt = new Emprunt
+            var empruntA = new Emprunt
             {
                 DateEmprunt = DateTime.Parse("2025-7-27"),
                 EstRendu = false,
@@ -296,7 +296,7 @@ public static class SeedData
                 Utilisateur = utilisateurEmprunt,
                 IdUtilisateur = utilisateurEmprunt.Id,
             };
-            context.Emprunts.Add( emprunt );
+            context.Emprunts.Add( empruntA );
             /* RESERVATIONS */
             var reservation = new Reservation
             {
@@ -309,6 +309,93 @@ public static class SeedData
                 IdLivre = livreEmprunt.Id,
             };
             context.Reservations.Add(reservation);
+
+
+            // Ajouter un nouvel utilisateur (membre)
+            var uNouveau = new Utilisateur
+            {
+                Nom = "Martin",
+                Prenom = "Claire",
+                DateDeNaissance = DateTime.Parse("1995-5-14"),
+                Tel = "0677889900",
+                NumeroDeRue = "5",
+                NomDeRue = "Avenue des Lilas",
+                Role = Classes.Enums.Role.Membre,
+                MotDePasse = PasswordHashHandler.HashPassword("clairemartin"),
+                Mail = "claire.martin@example.com",
+                Ville = "Lille",
+                CodePostal = "59800"
+            };
+            context.Utilisateurs.Add(uNouveau);
+            context.SaveChanges(); // pour générer Id
+
+            // Ajouter un 2e emprunt
+            var livreB = context.Livres.FirstOrDefault(l => l.Titre.Contains("Chambre des secrets"));
+            if (livreB != null)
+            {
+                var empruntB = new Emprunt
+                {
+                    DateEmprunt = DateTime.Parse("2025-7-15"),
+                    EstRendu = true,
+                    RetourEmprunt = DateTime.Parse("2025-7-29"),
+                    Livre = livreB,
+                    IdLivre = livreB.Id,
+                    Utilisateur = uAlice,
+                    IdUtilisateur = uAlice.Id,
+                };
+                context.Emprunts.Add(empruntB);
+            }
+
+            // Ajouter un 3e emprunt
+            var livreC = context.Livres.FirstOrDefault(l => l.Titre.Contains("Tour du monde"));
+            if (livreC != null)
+            {
+                var empruntC = new Emprunt
+                {
+                    DateEmprunt = DateTime.Parse("2025-6-01"),
+                    EstRendu = true,
+                    RetourEmprunt = DateTime.Parse("2025-6-20"),
+                    Livre = livreC,
+                    IdLivre = livreC.Id,
+                    Utilisateur = uBob,
+                    IdUtilisateur = uBob.Id,
+                };
+                context.Emprunts.Add(empruntC);
+            }
+
+            // Ajouter une 2e réservation
+            var livreD = context.Livres.FirstOrDefault(l => l.Titre.Contains("Prince de sang-mêlé"));
+            if (livreD != null)
+            {
+                var reservation2 = new Reservation
+                {
+                    DateReservation = DateTime.Parse("2025-7-28"),
+                    DateFinReservation = DateTime.Parse("2025-8-18"),
+                    EstTermine = false,
+                    Utilisateur = uAlice,
+                    IdUtilisateur = uAlice.Id,
+                    Livre = livreD,
+                    IdLivre = livreD.Id
+                };
+                context.Reservations.Add(reservation2);
+            }
+
+            // Ajouter une 3e réservation
+            var livreE = context.Livres.FirstOrDefault(l => l.Titre.Contains("Les Misérables"));
+            if (livreE != null)
+            {
+                var reservation3 = new Reservation
+                {
+                    DateReservation = DateTime.Parse("2025-7-20"),
+                    DateFinReservation = DateTime.Parse("2025-8-05"),
+                    EstTermine = true,
+                    Utilisateur = uNouveau,
+                    IdUtilisateur = uNouveau.Id,
+                    Livre = livreE,
+                    IdLivre = livreE.Id
+                };
+                context.Reservations.Add(reservation3);
+            }
 
             // Enregistrer les changements dans la bdd
             context.SaveChanges();

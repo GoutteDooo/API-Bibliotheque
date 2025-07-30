@@ -1,7 +1,8 @@
-﻿using System.IdentityModel.Tokens.Jwt;
+﻿using Brief_Bibliotheque.Models.Classes;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Microsoft.IdentityModel.Tokens;
 namespace Brief_Bibliotheque.Services
 {
     public class JwtService
@@ -13,16 +14,17 @@ namespace Brief_Bibliotheque.Services
             _key = config["Jwt:Key"]!;
         }
 
-        public string GenerateToken(string nom, string role)
+        public string GenerateToken(int id, string nom, string role)
         {
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_key));
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var claims = new[]
             {
-            new Claim(ClaimTypes.Name, nom),
-            new Claim(ClaimTypes.Role, role.ToString())
-        };
+                new Claim(ClaimTypes.NameIdentifier, id.ToString()),
+                new Claim(ClaimTypes.Name, nom),
+                new Claim(ClaimTypes.Role, role.ToString())
+            };
 
             var token = new JwtSecurityToken(
                 claims: claims,
