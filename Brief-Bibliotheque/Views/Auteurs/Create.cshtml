@@ -39,5 +39,18 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const form = document.querySelector("form");
+            const submitButton = form.querySelector("button[type='submit']");
+
+            form.addEventListener("submit", function () {
+                submitButton.disabled = true;
+                submitButton.innerText = "Création en cours...";
+            });
+        });
+    </script>
 }
