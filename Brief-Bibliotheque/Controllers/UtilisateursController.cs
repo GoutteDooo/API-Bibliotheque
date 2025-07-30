@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Brief_Bibliotheque.Handlers;
 
 namespace Brief_Bibliotheque.Controllers
 {
@@ -104,9 +105,12 @@ namespace Brief_Bibliotheque.Controllers
         {
             if (ModelState.IsValid)
             {
+                // Vérifier que le même email n'existe pas dans la bdd
+                var emailValide = await _context.Utilisateurs.FirstOrDefaultAsync(u => u.Mail == utilisateur.Mail);
+                if (emailValide is not null) return Problem("Problème lors de la création du compte");
+
                 // Hacher le mdp donné par l'utilisateur
-                var hasher = new PasswordHasher<Utilisateur>();
-                utilisateur.MotDePasse = hasher.HashPassword(utilisateur, utilisateur.MotDePasse);
+                utilisateur.MotDePasse = PasswordHashHandler.HashPassword(utilisateur.MotDePasse);
 
                 _context.Add(utilisateur);
                 await _context.SaveChangesAsync();
