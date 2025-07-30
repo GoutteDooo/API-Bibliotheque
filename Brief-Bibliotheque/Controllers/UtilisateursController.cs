@@ -44,7 +44,7 @@ namespace Brief_Bibliotheque.Controllers
                     CodePostal = u.CodePostal,
                 }).ToListAsync();
 
-                return View(model);
+            return View(model);
         }
 
         // GET: Utilisateurs/Details/5
@@ -92,7 +92,10 @@ namespace Brief_Bibliotheque.Controllers
         public IActionResult Create()
         {
             // Cast les rôles dans le ViewBag pour pouvoir les afficher dans la vue
-            ViewBag.Roles = ObtenirViewBagRoles();
+            if (User.IsInRole("Administrateur"))
+                ViewBag.Roles = ObtenirViewBagRoles(estAdmin: true);
+            else
+                ViewBag.Roles = ObtenirViewBagRoles(estAdmin: false);
 
             return View();
         }
@@ -130,7 +133,11 @@ namespace Brief_Bibliotheque.Controllers
 
             var utilisateurs = await _context.Utilisateurs.FindAsync(id);
 
-            ViewBag.Roles = ObtenirViewBagRoles();
+            if (User.IsInRole("Administrateur"))
+                ViewBag.Roles = ObtenirViewBagRoles(estAdmin:true);
+            else
+                ViewBag.Roles = ObtenirViewBagRoles(estAdmin:false);
+
 
             if (utilisateurs == null)
             {
@@ -215,15 +222,31 @@ namespace Brief_Bibliotheque.Controllers
         /**
          * Retourne les rôles de la classe enum Role pour l'affichage en liste déroulante avec <select></select>
          */
-        private static List<SelectListItem> ObtenirViewBagRoles()
+        private static List<SelectListItem> ObtenirViewBagRoles(bool estAdmin)
         {
-            return Enum.GetValues(typeof(Role)) // Obtient l'array suivant : Array { Role.Membre, Role.Employe, Role.Administrateur }
-                .Cast<Role>() // Convertir chaque élément de l'array en type Role (sinon object par défaut) => IEnumarable<Role>
-                .Select(r => new SelectListItem // Pour chaque Role r, on crée un nouvel object SelectListItem contenant : 
-                {
-                    Value = ((int)r).ToString(), // la valeur envoyée au serveur quand l'utilisateur choisit cette option (conversion en entier puis en chaîne)
-                    Text = r.ToString() // le texte affiché à l'écran dans la balise <select> (on récupère le nom textuel de l'enum ; "Membre" par exemple)
-                }).ToList();
+            if (estAdmin)
+            {
+                return Enum.GetValues(typeof(Role)) // Obtient l'array suivant : Array { Role.Membre, Role.Employe, Role.Administrateur }
+                    .Cast<Role>() // Convertir chaque élément de l'array en type Role (sinon object par défaut) => IEnumarable<Role>
+                    .Select(r => new SelectListItem // Pour chaque Role r, on crée un nouvel object SelectListItem contenant : 
+                    {
+                        Value = ((int)r).ToString(), // la valeur envoyée au serveur quand l'utilisateur choisit cette option (conversion en entier puis en chaîne)
+                        Text = r.ToString() // le texte affiché à l'écran dans la balise <select> (on récupère le nom textuel de l'enum ; "Membre" par exemple)
+                    }).ToList();
+            }
+            else
+            {
+                return Enum.GetValues(typeof(Role)) // Obtient l'array suivant : Array { Role.Membre, Role.Employe, Role.Administrateur }
+                    .Cast<Role>() // Convertir chaque élément de l'array en type Role (sinon object par défaut) => IEnumarable<Role>
+                    .Where(r => r == Role.Employé) // on ne garde que l'élément voulu
+                    .Select(r =>
+                        new SelectListItem // Pour chaque Role r, on crée un nouvel object SelectListItem contenant : 
+                        {
+                            Value = ((int)r).ToString(), // la valeur envoyée au serveur quand l'utilisateur choisit cette option (conversion en entier puis en chaîne)
+                            Text = r.ToString() // le texte affiché à l'écran dans la balise <select> (on récupère le nom textuel de l'enum ; "Membre" par exemple)
+                        })
+                    .ToList();
+            }
         }
     }
 }
