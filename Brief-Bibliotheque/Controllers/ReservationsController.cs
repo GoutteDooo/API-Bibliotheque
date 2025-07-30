@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Brief_Bibliotheque.Models.Classes;
 using Brief_Bibliotheque.Models.Data;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Brief_Bibliotheque.Controllers
 {
@@ -50,6 +51,7 @@ namespace Brief_Bibliotheque.Controllers
         }
 
         // GET: Reservations/Create
+        [Authorize(Roles = "Administrateur, Employé")]
         public IActionResult Create()
         {
             var reservation = new Reservation
@@ -64,6 +66,7 @@ namespace Brief_Bibliotheque.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrateur, Employé")]
         public async Task<IActionResult> Create([Bind("Id,DateReservation,EstTermine,IdUtilisateur,IdLivre")] Reservation reservation)
         {
             var livre = await _context.Livres.FirstOrDefaultAsync(l => l.Id == reservation.IdLivre);
@@ -118,6 +121,7 @@ namespace Brief_Bibliotheque.Controllers
         }
 
         // GET: Reservations/Edit/5
+        [Authorize(Roles = "Administrateur, Employé")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -138,6 +142,7 @@ namespace Brief_Bibliotheque.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrateur, Employé")]
         public async Task<IActionResult> Edit(int id, [Bind("Id,DateReservation,DateFinReservation,EstTermine,IdUtilisateur,IdLivre")] Reservation reservation)
         {
             if (id != reservation.Id)
@@ -169,6 +174,7 @@ namespace Brief_Bibliotheque.Controllers
         }
 
         // GET: Reservations/Delete/5
+        [Authorize(Roles = "Administrateur, Employé")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -189,6 +195,7 @@ namespace Brief_Bibliotheque.Controllers
         // POST: Reservations/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrateur, Employé")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var reservation = await _context.Reservations.FindAsync(id);

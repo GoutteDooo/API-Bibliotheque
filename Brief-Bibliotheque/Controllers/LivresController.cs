@@ -83,6 +83,7 @@ namespace Brief_Bibliotheque.Controllers
         }
 
         // GET: Livres/Create
+        [Authorize(Roles = "Administrateur, Employé")]
         public async Task<IActionResult> Create()
         {
             ViewBag.Genres = await _context.Genres.ToListAsync();
@@ -95,6 +96,7 @@ namespace Brief_Bibliotheque.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrateur, Employé")]
         public async Task<IActionResult> Create(
             [Bind("Id,Isbn,Titre,AnneePublication,Etat,EstEmprunte,EstReserve,EstDisponible")] Livre livres,
             int[] selectedGenres,
@@ -133,6 +135,7 @@ namespace Brief_Bibliotheque.Controllers
             return View(livres);
         }
         // GET: Livres/Edit/5
+        [Authorize(Roles = "Administrateur, Employé")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -153,6 +156,7 @@ namespace Brief_Bibliotheque.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrateur, Employé")]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Isbn,Titre,AnneePublication,Etat,EstEmprunte,EstReserve,EstDisponible")] Livre livres)
         {
             if (id != livres.Id)
@@ -184,7 +188,7 @@ namespace Brief_Bibliotheque.Controllers
         }
 
         // GET: Livres/Delete/5
-        [Authorize(Roles = "Administrateur")]
+        [Authorize(Roles = "Administrateur, Employé")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -205,6 +209,7 @@ namespace Brief_Bibliotheque.Controllers
         // POST: Livres/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrateur, Employé")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var livres = await _context.Livres.FindAsync(id);

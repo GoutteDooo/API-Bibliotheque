@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using System;
-
+using Microsoft.AspNetCore.Authorization;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,6 +14,7 @@ using Brief_Bibliotheque.Handlers;
 
 namespace Brief_Bibliotheque.Controllers
 {
+    [Authorize(Roles = "Administrateur, Employé")]
     public class UtilisateursController : Controller
     {
         private readonly BiblioDB _context;

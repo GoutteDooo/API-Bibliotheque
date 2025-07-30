@@ -5,11 +5,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.EntityFrameworkCore;
 using Swashbuckle.AspNetCore.Annotations;
-
+using Microsoft.AspNetCore.Authorization;
 namespace Brief_Bibliotheque.Controllers.API
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Administrateur")]
     public class UtilisateursApiController : ControllerBase
     {
         private readonly BiblioDB _context;
@@ -62,7 +63,7 @@ namespace Brief_Bibliotheque.Controllers.API
         [SwaggerOperation(Summary = "Modifier un utilisateur par son ID")]
         [SwaggerResponse(200, "Succès", typeof(Auteur))]
         [SwaggerResponse(404, "Utilisateur non trouvé")]
-        public async Task<ActionResult<Utilisateur>> PutUtilisateur (int id , Utilisateur utilisateur)
+        public async Task<ActionResult<Utilisateur>> PutUtilisateur(int id, Utilisateur utilisateur)
         {
             if (id != utilisateur.Id)
                 return BadRequest();
@@ -86,7 +87,7 @@ namespace Brief_Bibliotheque.Controllers.API
         [SwaggerOperation(Summary = "Supprimer un utilisateur par son ID")]
         [SwaggerResponse(200, "Succès", typeof(Auteur))]
         [SwaggerResponse(404, "Utilisateur non trouvé")]
-        public async Task<ActionResult<Utilisateur>> DeleteUtilisateur (int id)
+        public async Task<ActionResult<Utilisateur>> DeleteUtilisateur(int id)
         {
             var utilisateur = await _context.Utilisateurs.FindAsync(id);
 

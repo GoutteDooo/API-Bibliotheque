@@ -5,11 +5,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.EntityFrameworkCore;
 using Swashbuckle.AspNetCore.Annotations;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Brief_Bibliotheque.Controllers.API
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Administrateur")]
     public class GenresApiController : ControllerBase
     {
         private readonly BiblioDB _context;

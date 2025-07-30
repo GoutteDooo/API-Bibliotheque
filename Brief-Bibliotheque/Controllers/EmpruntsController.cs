@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Brief_Bibliotheque.Models.Classes;
 using Brief_Bibliotheque.Models.Data;
@@ -22,11 +23,21 @@ namespace Brief_Bibliotheque.Controllers
         // GET: Emprunts
         public async Task<IActionResult> Index(bool? enCours = null)
         {
+            // TODO
             // Récupérer les Emprunts et Utilisateurs pour chaque emprunt afin de les envoyer à la vue
-            var query = _context.Emprunts
-                .Include(e => e.Livre)
-                .Include(e => e.Utilisateur)
-                .AsQueryable();
+
+            var query = 
+                //User.IsInRole("Membre") ?
+                //_context.Emprunts
+                //    .Include(e => e.Livre)
+                //    .Include(e => e.Utilisateur)
+                //    .Select(u => u.Id)
+                //    .AsQueryable()
+                //    :
+                _context.Emprunts
+                    .Include(e => e.Livre)
+                    .Include(e => e.Utilisateur)
+                    .AsQueryable();
 
             // Filtrer selon le statut si spécifié
             if (enCours.HasValue)
@@ -49,24 +60,25 @@ namespace Brief_Bibliotheque.Controllers
         }
 
         // GET: Emprunts/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
+        //public async Task<IActionResult> Details(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            var emprunts = await _context.Emprunts
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (emprunts == null)
-            {
-                return NotFound();
-            }
+        //    var emprunts = await _context.Emprunts
+        //        .FirstOrDefaultAsync(m => m.Id == id);
+        //    if (emprunts == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            return View(emprunts);
-        }
+        //    return View(emprunts);
+        //}
 
         // GET: Emprunts/Create
+        [Authorize(Roles = "Administrateur, Employé")]
         public IActionResult Create()
         {
             // Retourner un EmpruntViewModel pour n'afficher que les propriétés intéressantes
@@ -79,6 +91,7 @@ namespace Brief_Bibliotheque.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrateur, Employé")]
         public async Task<IActionResult> Create([Bind("Id,DateEmprunt,IdLivre,IdUtilisateur")] EmpruntViewModel empruntVM)
         {
             if (ModelState.IsValid)
@@ -140,6 +153,7 @@ namespace Brief_Bibliotheque.Controllers
         /**
          * Cette méthode Edit n'édite que la date d'emprunt (ajoute 7 jours), car c'est la seule donnée pertinente à pouvoir être éditée
          */
+        [Authorize(Roles = "Administrateur, Employé")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -190,6 +204,7 @@ namespace Brief_Bibliotheque.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrateur, Employé")]
         public async Task<IActionResult> Edit(int id, [Bind("Id,DateEmprunt,EstRendu,RetourEmprunt,IdLivre,IdUtilisateur")] Emprunt emprunt)
         {
             if (id != emprunt.Id)
@@ -221,6 +236,7 @@ namespace Brief_Bibliotheque.Controllers
         }
 
         // GET: Emprunts/Delete/5
+        [Authorize(Roles = "Administrateur, Employé")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -241,6 +257,7 @@ namespace Brief_Bibliotheque.Controllers
         // POST: Emprunts/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrateur, Employé")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var emprunt = await _context.Emprunts.FindAsync(id);
@@ -254,6 +271,7 @@ namespace Brief_Bibliotheque.Controllers
         }
 
         // GET : Emprunts/Rendu
+        [Authorize(Roles = "Administrateur, Employé")]
         public async Task<IActionResult> Rendre(int id)
         {
             var emprunt = await _context.Emprunts.FindAsync(id);

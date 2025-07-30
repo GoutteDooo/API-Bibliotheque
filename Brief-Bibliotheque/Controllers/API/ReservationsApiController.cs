@@ -5,11 +5,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.EntityFrameworkCore;
 using Swashbuckle.AspNetCore.Annotations;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Brief_Bibliotheque.Controllers.API
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Administrateur")]
     public class ReservationsApiController : ControllerBase
     {
         private readonly BiblioDB _context;
@@ -37,7 +39,7 @@ namespace Brief_Bibliotheque.Controllers.API
         {
             var reservation = await _context.Reservations.FindAsync(id);
 
-            if(reservation == null)
+            if (reservation == null)
             {
                 return NotFound();
             }
@@ -62,7 +64,7 @@ namespace Brief_Bibliotheque.Controllers.API
         [SwaggerOperation(Summary = "Modifier une réservation par son ID")]
         [SwaggerResponse(200, "Succès", typeof(Auteur))]
         [SwaggerResponse(404, "Réservation non trouvé")]
-        public async Task<ActionResult<Reservation>> PutReservation (int id, Reservation reservation)
+        public async Task<ActionResult<Reservation>> PutReservation(int id, Reservation reservation)
         {
             if (id != reservation.Id)
                 return BadRequest();
@@ -72,7 +74,7 @@ namespace Brief_Bibliotheque.Controllers.API
             {
                 await _context.SaveChangesAsync();
             }
-            catch(DbUpdateConcurrencyException)
+            catch (DbUpdateConcurrencyException)
             {
                 if (!_context.Reservations.Any(e => e.Id == id))
                     return NotFound();
