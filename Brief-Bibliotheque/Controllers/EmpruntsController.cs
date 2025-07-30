@@ -41,6 +41,8 @@ namespace Brief_Bibliotheque.Controllers
             }
             */
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            Console.WriteLine("USER ID : " + userId);
+
 
             var query = _context.Emprunts
                     .Include(e => e.Livre)
