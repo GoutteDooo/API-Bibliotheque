@@ -24,31 +24,6 @@ namespace Brief_Bibliotheque.Controllers
             _jwtService = jwtService;
         }
 
-        // GARDER : Gestion des utilisateurs (Index, Details, Edit, Delete)
-        // GET: Auth
-        public async Task<IActionResult> Index()
-        {
-            return View(await _context.Utilisateurs.ToListAsync());
-        }
-
-        // GET: Auth/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var utilisateur = await _context.Utilisateurs
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (utilisateur == null)
-            {
-                return NotFound();
-            }
-
-            return View(utilisateur);
-        }
-
         // GET: Auth/Register
         public IActionResult Register()
         {
@@ -113,9 +88,6 @@ namespace Brief_Bibliotheque.Controllers
             var user = await _context.Utilisateurs
                 .FirstOrDefaultAsync(u => u.Mail == mail);
 
-            //if (user is not null) Console.WriteLine("USER MAIL :" + user.Mail);
-            //else Console.WriteLine("USER NON TROUVE");
-
             if (user == null || !PasswordHashHandler.VerifyPassword(motDePasse, user.MotDePasse))
             {
                 ViewBag.Error = "Mail ou mot de passe incorrect";
@@ -138,94 +110,6 @@ namespace Brief_Bibliotheque.Controllers
         {
             Response.Cookies.Delete("jwt-token");
             return RedirectToAction("Index", "Home");
-        }
-
-        // GARDER : Méthodes existantes pour la gestion des utilisateurs
-        // GET: Auth/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var utilisateur = await _context.Utilisateurs.FindAsync(id);
-            if (utilisateur == null)
-            {
-                return NotFound();
-            }
-            return View(utilisateur);
-        }
-
-        // POST: Auth/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("UtilisateurId,Tel,NumeroDeRue,NomDeRue,Role,MotDePasse,Mail,Ville,CodePostal,Id,Nom,Prenom,DateDeNaissance")] Utilisateur utilisateur)
-        {
-            if (id != utilisateur.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(utilisateur);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!UtilisateurExists(utilisateur.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(utilisateur);
-        }
-
-        // GET: Auth/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var utilisateur = await _context.Utilisateurs
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (utilisateur == null)
-            {
-                return NotFound();
-            }
-
-            return View(utilisateur);
-        }
-
-        // POST: Auth/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var utilisateur = await _context.Utilisateurs.FindAsync(id);
-            if (utilisateur != null)
-            {
-                _context.Utilisateurs.Remove(utilisateur);
-            }
-
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
-        private bool UtilisateurExists(int id)
-        {
-            return _context.Utilisateurs.Any(e => e.Id == id);
         }
 
         // GET: Auth/ResetPassword
