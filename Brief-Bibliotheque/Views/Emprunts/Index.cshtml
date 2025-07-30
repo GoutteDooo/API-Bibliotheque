@@ -13,7 +13,10 @@
 </div>
 
 <p>
-    <a asp-action="Create">Nouvel emprunt</a>
+    @if (User.IsInRole("Administrateur") || User.IsInRole("Employé"))
+    {
+        <a asp-action="Create">Nouvel Emprunt</a>
+    }
 </p>
 <table class="table">
     <thead>

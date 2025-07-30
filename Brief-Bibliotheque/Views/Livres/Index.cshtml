@@ -7,7 +7,10 @@
 <h1>Livres</h1>
 
 <p>
-    <a asp-action="Create">Insérer un nouveau livre</a>
+    @if (User.IsInRole("Administrateur") || User.IsInRole("Employé"))
+    {
+        <a asp-action="Create">Insérer un nouveau livre</a>
+    }
 </p>
 <table id="livresTable" class="table">
     <thead>
