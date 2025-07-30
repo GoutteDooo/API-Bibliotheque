@@ -59,7 +59,7 @@ public static class SeedData
                 NumeroDeRue = "22",
                 NomDeRue = "Rue de la Blague",
                 Role = Classes.Enums.Role.Employé,
-                MotDePasse = PasswordHashHandler.HashPassword("ZéroPlusZéro"),
+                MotDePasse = PasswordHashHandler.HashPassword("0+0"),
                 Mail = "latete@toto.haha",
                 Ville = "TotoLand",
                 CodePostal = "12345"
