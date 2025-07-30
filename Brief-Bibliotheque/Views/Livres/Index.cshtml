@@ -117,9 +117,14 @@
                     @string.Join(", ", item.Genres.Select(g => g.NomGenre))
                 </td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    <a asp-action="Details" asp-route-id="@item.Id">Détails</a>
+                    @if (User.IsInRole("Administrateur") || User.IsInRole("Employé"))
+                    {
+                        <span>|</span>
+                        <a asp-action="Edit" asp-route-id="@item.Id">Editer</a>
+                        <span>|</span>
+                        <a asp-action="Delete" asp-route-id="@item.Id">Supprimer</a>
+                    }
                 </td>
             </tr>
         }
