@@ -24,25 +24,7 @@ namespace Brief_Bibliotheque.Controllers
         // GET: Emprunts
         public async Task<IActionResult> Index(bool? enCours = null)
         {
-            // TODO
-            // Récupérer les Emprunts et Utilisateurs pour chaque emprunt afin de les envoyer à la vue
-            /*
-            var query = _context.Emprunts
-                    .Include(e => e.Livre)
-                    .Include(e => e.Utilisateur)
-                    .AsQueryable();
-
-            if (User.IsInRole("Membre"))
-            {
-                query = _context.Emprunts
-                    .Include(e => e.Livre)
-                    .Include(e => e.Utilisateur)
-                    .AsQueryable();
-            }
-            */
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            Console.WriteLine("USER ID : " + userId);
-
 
             var query = _context.Emprunts
                     .Include(e => e.Livre)

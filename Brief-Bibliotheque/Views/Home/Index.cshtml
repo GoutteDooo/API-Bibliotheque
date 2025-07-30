@@ -3,7 +3,15 @@
 }
 
 <div class="text-center">
-    <h1 style="color: darkolivegreen">Bienvenue</h1>    <hr />
+    <h1 style="color: darkolivegreen">Bienvenue @User.Identity.Name </h1>
+    <hr />
+    @if (User.IsInRole("Employé") || User.IsInRole("Administrateur"))
+    {
+        <a class="btn btn-outline-success shadow transition rounded-pill btn-lg" asp-controller="Emprunts" asp-action="Create">Faire un emprunt</a>
+        <a class="btn btn-outline-success shadow transition rounded-pill btn-lg" asp-controller="Reservations" asp-action="Create">Faire une réservation</a>
+        <a class="btn btn-outline-success shadow transition rounded-pill btn-lg" asp-controller="Livres" asp-action="Create">Ajouter un livre</a>
+        <hr />
+    }
     <form asp-controller="Livres" asp-action="Index">
         <label class="fs-2">
             Rechercher un livre

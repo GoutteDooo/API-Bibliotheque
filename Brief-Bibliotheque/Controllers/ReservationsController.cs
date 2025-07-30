@@ -1,13 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Brief_Bibliotheque.Models.Classes;
+using Brief_Bibliotheque.Models.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Brief_Bibliotheque.Models.Classes;
-using Brief_Bibliotheque.Models.Data;
-using Microsoft.AspNetCore.Authorization;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace Brief_Bibliotheque.Controllers
 {
@@ -23,13 +24,25 @@ namespace Brief_Bibliotheque.Controllers
         // GET: Reservations
         public async Task<IActionResult> Index()
         {
-            // Récupérer les Livres et Utilisateurs pour chaque réservation afin de les envoyer à la vue
-            var reservations = await _context.Reservations
+
+            // Récupérer l'id du jwt
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            var query = _context.Reservations
                 .Include(l => l.Livre)
                 .Include(l => l.Utilisateur)
+                .AsQueryable();
+
+            if (User.IsInRole("Membre") && int.TryParse(userId, out int parsedId))
+            {
+                query = query.Where(r => r.IdUtilisateur == parsedId);
+            }
+
+            var reservations = await query
+                .OrderBy(r => r.DateFinReservation)
                 .ToListAsync();
 
-            return View(reservations);
+            return View(query);
         }
 
         // GET: Reservations/Details/5

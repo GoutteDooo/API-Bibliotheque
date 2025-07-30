@@ -20,13 +20,28 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Emprunts" asp-action="Index">
+                                @if (User.IsInRole("Membre"))
+                                {
+                                    <span style="color:darkslateblue">Mes emprunts</span>
+                                }
+                                else
+                                {
+                                    <span>Consulter Emprunts</span>
+                                }
+                                </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Emprunts" asp-action="Index">Emprunts</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Reservations" asp-action="Index">Réservations</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Reservations" asp-action="Index">
+                                @if (User.IsInRole("Membre"))
+                                {
+                                    <span>Mes Réservations</span>
+                                }
+                                else
+                                {
+                                    <span>Les Réservations</span>
+                                }
+                            </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Livres" asp-action="Index">Livres</a>
@@ -37,12 +52,12 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Genres" asp-action="Index">Genres</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Utilisateurs" asp-action="Index">Utilisateurs</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Employe">Vue Employé</a>
-                        </li>
+                        @if (User.IsInRole("Administrateur") || User.IsInRole("Employé"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Utilisateurs" asp-action="Index">Utilisateurs</a>
+                            </li>
+                        }
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
@@ -52,6 +67,8 @@
                                 <a class="nav-link text-dark" asp-area="" asp-controller="swagger" asp-action="index">Swagger</a>
                             </li>
                         }
+                    </ul>
+                    <ul class="navbar-nav flex-grow-1">
                         @if (User.Identity.IsAuthenticated)
                         {
                             <li class="nav-item">
