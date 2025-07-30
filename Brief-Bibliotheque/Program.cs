@@ -3,6 +3,10 @@ using Microsoft.EntityFrameworkCore.Sqlite;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Annotations;
 using Brief_Bibliotheque.Models.Data;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Brief_Bibliotheque.Services;
 
 namespace Brief_Bibliotheque
 {
@@ -17,6 +21,36 @@ namespace Brief_Bibliotheque
 
             builder.Services.AddDbContext<BiblioDB>(options =>
                 options.UseSqlite("Data Source=biblio.db"));
+
+            // Configuration JWT
+            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(
+                            Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!)),
+                        ValidateIssuer = false,
+                        ValidateAudience = false,
+                        ValidateLifetime = true
+                    };
+                    options.Events = new JwtBearerEvents
+                    {
+                        OnMessageReceived = context =>
+                        {
+                            // Lire le token depuis le cookie au lieu du header
+                            if (context.Request.Cookies.ContainsKey("jwt-token"))
+                            {
+                                context.Token = context.Request.Cookies["jwt-token"];
+                            }
+                            return Task.CompletedTask;
+                        }
+                    };
+                });
+
+            // Enregistrer le service JWT
+            builder.Services.AddScoped<JwtService>();
 
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen(c =>
@@ -36,6 +70,14 @@ namespace Brief_Bibliotheque
 
                 });
                 c.EnableAnnotations();
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Description = "JWT Authorization header using the Bearer scheme. \r\n\r\n Entrez 'Bearer' [espace] puis votre token dans le champ ci-dessous.\r\n\r\nExemple: 'Bearer abc123'",
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer"
+                });
             });
 
             var app = builder.Build();
@@ -70,6 +112,7 @@ namespace Brief_Bibliotheque
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllerRoute(
