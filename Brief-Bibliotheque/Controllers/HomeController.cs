@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using Brief_Bibliotheque.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Brief_Bibliotheque.Controllers
 {
@@ -18,6 +19,7 @@ namespace Brief_Bibliotheque.Controllers
             return View();
         }
 
+        [Authorize(Roles = "Administrateur, Employé")]
         public IActionResult Employe(int id)
         {
             return View();

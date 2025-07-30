@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Brief_Bibliotheque.Models.Classes;
+using Brief_Bibliotheque.Models.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Brief_Bibliotheque.Models.Classes;
-using Brief_Bibliotheque.Models.Data;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Brief_Bibliotheque.Controllers
 {
@@ -51,6 +52,7 @@ namespace Brief_Bibliotheque.Controllers
         }
 
         // GET: Auteurs/Create
+        [Authorize(Roles = "Administrateur, Employé")]
         public IActionResult Create()
         {
             return View();
@@ -60,7 +62,8 @@ namespace Brief_Bibliotheque.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        //[ValidateAntiForgeryToken]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrateur, Employé")]
         public async Task<IActionResult> Create([Bind("Id,Nom,Prenom,DateDeNaissance")] Auteur auteurs)
         {
             if (ModelState.IsValid)
@@ -73,6 +76,7 @@ namespace Brief_Bibliotheque.Controllers
         }
 
         // GET: Auteurs/Edit/5
+        [Authorize(Roles = "Administrateur, Employé")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -93,6 +97,8 @@ namespace Brief_Bibliotheque.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrateur, Employé")]
+
         public async Task<IActionResult> Edit(int id, [Bind("Id,Nom,Prenom,DateDeNaissance")] Auteur auteurs)
         {
             if (id != auteurs.Id)
@@ -124,6 +130,8 @@ namespace Brief_Bibliotheque.Controllers
         }
 
         // GET: Auteurs/Delete/5
+        [Authorize(Roles = "Administrateur, Employé")]
+
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -144,6 +152,7 @@ namespace Brief_Bibliotheque.Controllers
         // POST: Auteurs/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrateur, Employé")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var auteurs = await _context.Auteurs.FindAsync(id);
