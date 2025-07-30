@@ -72,7 +72,7 @@ namespace Brief_Bibliotheque.Controllers
                 await _context.SaveChangesAsync();
 
                 // Après inscription, connecter automatiquement
-                var token = _jwtService.GenerateToken(utilisateur.Nom, utilisateur.Role.ToString());
+                var token = _jwtService.GenerateToken(utilisateur.Id, utilisateur.Nom, utilisateur.Role.ToString());
 
                 Response.Cookies.Append("jwt-token", token, new CookieOptions
                 {
@@ -121,7 +121,7 @@ namespace Brief_Bibliotheque.Controllers
                 return View();
             }
 
-            var token = _jwtService.GenerateToken(user.Nom, user.Role.ToString());
+            var token = _jwtService.GenerateToken(user.Id, user.Nom, user.Role.ToString());
 
             Response.Cookies.Append("jwt-token", token, new CookieOptions
             {
