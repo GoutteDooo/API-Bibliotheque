@@ -75,8 +75,13 @@
                     @Html.DisplayFor(modelItem => item.Utilisateur!.Nom)
                 </td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Prolonger l'emprunt</a> |
-                    <a asp-action="Rendre" asp-route-id="@item.Id">Emprunt rendu</a> |
+
+                    @if (!item.EstRendu)
+                    {
+                        <a asp-action="Edit" asp-route-id="@item.Id">Prolonger l'emprunt</a> <span>|</span>
+                        <a asp-action="Rendre" asp-route-id="@item.Id">Emprunt rendu</a> <span>|</span>
+                    }
+
                     <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
                 </td>
             </tr>
