@@ -113,14 +113,14 @@ namespace Brief_Bibliotheque.Controllers
         }
 
         // GET: Auth/ResetPassword
-        [Authorize(Roles = "Administrateur,Employe,Membre")]
+        [Authorize(Roles = "Administrateur,Employé,Membre")]
         public IActionResult ResetPassword()
         {
             return View();
         }
 
         // POST: Auth/ResetPassword
-        [Authorize(Roles = "Administrateur,Employe,Membre")]
+        [Authorize(Roles = "Administrateur,Employé,Membre")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ResetPassword(string ancienMotDePasse, string nouveauMotDePasse, string confirmerMotDePasse)
