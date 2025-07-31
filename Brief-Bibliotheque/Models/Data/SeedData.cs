@@ -200,9 +200,9 @@ public static class SeedData
                     Titre = "Harry Potter et le Prince de sang-mêlé",
                     AnneePublication = 2005,
                     Etat = "Neuf",
-                    EstEmprunte = false,
+                    EstEmprunte = true,
                     EstReserve = false,
-                    EstDisponible = true,
+                    EstDisponible = false,
                     Genres = new List<Genre>
                     {
                             gFantaisie

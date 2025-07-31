@@ -1,16 +1,17 @@
-﻿using Brief_Bibliotheque.Models.Classes;
+﻿using Brief_Bibliotheque.Handlers;
+using Brief_Bibliotheque.Models.Classes;
 using Brief_Bibliotheque.Models.Classes.Enums;
 using Brief_Bibliotheque.Models.Data;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
 using System;
-using Microsoft.AspNetCore.Authorization;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
-using Brief_Bibliotheque.Handlers;
 
 namespace Brief_Bibliotheque.Controllers
 {
@@ -44,7 +45,7 @@ namespace Brief_Bibliotheque.Controllers
                     CodePostal = u.CodePostal,
                 }).ToListAsync();
 
-                return View(model);
+            return View(model);
         }
 
         // GET: Utilisateurs/Details/5
@@ -92,7 +93,10 @@ namespace Brief_Bibliotheque.Controllers
         public IActionResult Create()
         {
             // Cast les rôles dans le ViewBag pour pouvoir les afficher dans la vue
-            ViewBag.Roles = ObtenirViewBagRoles();
+            if (User.IsInRole("Administrateur"))
+                ViewBag.Roles = ObtenirViewBagRoles(estAdmin: true);
+            else
+                ViewBag.Roles = ObtenirViewBagRoles(estAdmin: false);
 
             return View();
         }
@@ -128,15 +132,34 @@ namespace Brief_Bibliotheque.Controllers
                 return NotFound();
             }
 
-            var utilisateurs = await _context.Utilisateurs.FindAsync(id);
+            // Aller chercher le role du profil utilisateur à éditer
+            var utilisateurAEditer = await _context.Utilisateurs.FindAsync(id);
 
-            ViewBag.Roles = ObtenirViewBagRoles();
+            if (utilisateurAEditer == null) return NotFound();
 
-            if (utilisateurs == null)
+            // Si utilisateur est un Employé, il peut éditer les comptes des membres et son propre compte
+            var role = utilisateurAEditer.Role;
+
+            //Récupérer l'id de l'utilisateur
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var estLuiMeme = Convert.ToInt32(userId) == utilisateurAEditer.Id;
+
+            // Vérifie que l'utilisateur est un employé, qu'il ne se sélectionne pas, et que le role est différent de membre
+            // Si c'est le cas : accès non autorisé (édite un admin ou un autre employé)
+            if (User.IsInRole("Employé") && !estLuiMeme && role != Role.Membre)
             {
-                return NotFound();
+                return Unauthorized();
             }
-            return View(utilisateurs);
+
+            // Si c'est un admin, on ne change rien
+
+            if (User.IsInRole("Administrateur"))
+                ViewBag.Roles = ObtenirViewBagRoles(estAdmin:true);
+            else
+                ViewBag.Roles = ObtenirViewBagRoles(estAdmin:false);
+
+
+            return View(utilisateurAEditer);
         }
 
         // POST: Utilisateurs/Edit/5
@@ -215,15 +238,31 @@ namespace Brief_Bibliotheque.Controllers
         /**
          * Retourne les rôles de la classe enum Role pour l'affichage en liste déroulante avec <select></select>
          */
-        private static List<SelectListItem> ObtenirViewBagRoles()
+        private static List<SelectListItem> ObtenirViewBagRoles(bool estAdmin)
         {
-            return Enum.GetValues(typeof(Role)) // Obtient l'array suivant : Array { Role.Membre, Role.Employe, Role.Administrateur }
-                .Cast<Role>() // Convertir chaque élément de l'array en type Role (sinon object par défaut) => IEnumarable<Role>
-                .Select(r => new SelectListItem // Pour chaque Role r, on crée un nouvel object SelectListItem contenant : 
-                {
-                    Value = ((int)r).ToString(), // la valeur envoyée au serveur quand l'utilisateur choisit cette option (conversion en entier puis en chaîne)
-                    Text = r.ToString() // le texte affiché à l'écran dans la balise <select> (on récupère le nom textuel de l'enum ; "Membre" par exemple)
-                }).ToList();
+            if (estAdmin)
+            {
+                return Enum.GetValues(typeof(Role)) // Obtient l'array suivant : Array { Role.Membre, Role.Employe, Role.Administrateur }
+                    .Cast<Role>() // Convertir chaque élément de l'array en type Role (sinon object par défaut) => IEnumarable<Role>
+                    .Select(r => new SelectListItem // Pour chaque Role r, on crée un nouvel object SelectListItem contenant : 
+                    {
+                        Value = ((int)r).ToString(), // la valeur envoyée au serveur quand l'utilisateur choisit cette option (conversion en entier puis en chaîne)
+                        Text = r.ToString() // le texte affiché à l'écran dans la balise <select> (on récupère le nom textuel de l'enum ; "Membre" par exemple)
+                    }).ToList();
+            }
+            else
+            {
+                return Enum.GetValues(typeof(Role)) // Obtient l'array suivant : Array { Role.Membre, Role.Employe, Role.Administrateur }
+                    .Cast<Role>() // Convertir chaque élément de l'array en type Role (sinon object par défaut) => IEnumarable<Role>
+                    .Where(r => r == Role.Employé) // on ne garde que l'élément voulu
+                    .Select(r =>
+                        new SelectListItem // Pour chaque Role r, on crée un nouvel object SelectListItem contenant : 
+                        {
+                            Value = ((int)r).ToString(), // la valeur envoyée au serveur quand l'utilisateur choisit cette option (conversion en entier puis en chaîne)
+                            Text = r.ToString() // le texte affiché à l'écran dans la balise <select> (on récupère le nom textuel de l'enum ; "Membre" par exemple)
+                        })
+                    .ToList();
+            }
         }
     }
 }

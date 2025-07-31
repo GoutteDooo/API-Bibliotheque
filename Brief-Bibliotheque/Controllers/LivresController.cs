@@ -30,8 +30,8 @@ namespace Brief_Bibliotheque.Controllers
         {
             if (_context.Livres == null) return Problem("Aucun livre dans la base de données");
 
-            Console.BackgroundColor = ConsoleColor.Red;
-            Console.WriteLine("RECHERCHE : " + recherche);
+            //Console.BackgroundColor = ConsoleColor.Red;
+            //Console.WriteLine("RECHERCHE : " + recherche);
 
             // Récupérer les livres avec leurs auteurs et genres
             var query = _context.Livres
