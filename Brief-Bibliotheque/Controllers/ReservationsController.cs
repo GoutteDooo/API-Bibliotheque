@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 
 namespace Brief_Bibliotheque.Controllers
 {
+    [Authorize]
     public class ReservationsController : Controller
     {
         private readonly BiblioDB _context;

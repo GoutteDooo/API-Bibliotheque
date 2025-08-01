@@ -138,7 +138,7 @@ namespace Brief_Bibliotheque.Controllers
             if (utilisateurAEditer == null) return NotFound();
 
             // Si utilisateur est un Employé, il peut éditer les comptes des membres et son propre compte
-            var role = utilisateurAEditer.Role;
+            var roleAEditer = utilisateurAEditer.Role;
 
             //Récupérer l'id de l'utilisateur
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -146,7 +146,7 @@ namespace Brief_Bibliotheque.Controllers
 
             // Vérifie que l'utilisateur est un employé, qu'il ne se sélectionne pas, et que le role est différent de membre
             // Si c'est le cas : accès non autorisé (édite un admin ou un autre employé)
-            if (User.IsInRole("Employé") && !estLuiMeme && role != Role.Membre)
+            if (User.IsInRole("Employé") && !estLuiMeme && roleAEditer != Role.Membre)
             {
                 return Unauthorized();
             }
@@ -172,6 +172,12 @@ namespace Brief_Bibliotheque.Controllers
             if (id != utilisateur.Id)
             {
                 return NotFound();
+            }
+
+            //Si Employé veut mettre le role admin ou employé (hack)
+            if (!User.IsInRole("Administrateur") && utilisateur.Role != Role.Membre)
+            {
+                return Unauthorized();
             }
 
             if (ModelState.IsValid)
@@ -254,7 +260,7 @@ namespace Brief_Bibliotheque.Controllers
             {
                 return Enum.GetValues(typeof(Role)) // Obtient l'array suivant : Array { Role.Membre, Role.Employe, Role.Administrateur }
                     .Cast<Role>() // Convertir chaque élément de l'array en type Role (sinon object par défaut) => IEnumarable<Role>
-                    .Where(r => r == Role.Employé) // on ne garde que l'élément voulu
+                    .Where(r => r == Role.Membre) // on ne garde que l'élément voulu
                     .Select(r =>
                         new SelectListItem // Pour chaque Role r, on crée un nouvel object SelectListItem contenant : 
                         {

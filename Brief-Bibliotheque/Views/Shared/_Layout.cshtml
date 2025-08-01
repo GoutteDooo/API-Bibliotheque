@@ -9,6 +9,9 @@
     <link rel="stylesheet" href="~/Brief_Bibliotheque.styles.css" asp-append-version="true" />
 </head>
 <body>
+    <div id="welcome-filter">
+        <span id="text-wf">Bienvenue</span>
+    </div>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
@@ -21,30 +24,30 @@
                     <ul class="navbar-nav flex-grow-1">
                         @if (User.Identity.IsAuthenticated)
                         {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Emprunts" asp-action="Index">
-                                    @if (User.IsInRole("Membre"))
-                                    {
-                                        <span style="color:darkslateblue">Mes emprunts</span>
-                                    }
-                                    else
-                                    {
-                                        <span>Consulter Emprunts</span>
-                                    }
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Emprunts" asp-action="Index">
+                                @if (User.IsInRole("Membre"))
+                                {
+                                    <span style="color:darkslateblue">Mes emprunts</span>
+                                }
+                                else 
+                                {
+                                    <span>Consulter Emprunts</span>
+                                }
                                 </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Reservations" asp-action="Index">
-                                    @if (User.IsInRole("Membre"))
-                                    {
-                                        <span>Mes Réservations</span>
-                                    }
-                                    else
-                                    {
-                                        <span>Les Réservations</span>
-                                    }
-                                </a>
-                            </li>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Reservations" asp-action="Index">
+                                @if (User.IsInRole("Membre"))
+                                {
+                                    <span>Mes Réservations</span>
+                                }
+                                else
+                                {
+                                    <span>Les Réservations</span>
+                                }
+                            </a>
+                        </li>
                         }
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Livres" asp-action="Index">Livres</a>
