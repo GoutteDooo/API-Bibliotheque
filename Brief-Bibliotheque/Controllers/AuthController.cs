@@ -113,14 +113,14 @@ namespace Brief_Bibliotheque.Controllers
         }
 
         // GET: Auth/ResetPassword
-        [Authorize(Roles = "Administrateur,Employe,Membre")]
+        [Authorize(Roles = "Administrateur,Employé,Membre")]
         public IActionResult ResetPassword()
         {
             return View();
         }
 
         // POST: Auth/ResetPassword
-        [Authorize(Roles = "Administrateur,Employe,Membre")]
+        [Authorize(Roles = "Administrateur,Employé,Membre")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ResetPassword(string ancienMotDePasse, string nouveauMotDePasse, string confirmerMotDePasse)
@@ -153,6 +153,13 @@ namespace Brief_Bibliotheque.Controllers
             if (!PasswordHashHandler.VerifyPassword(ancienMotDePasse, user.MotDePasse))
             {
                 ViewBag.Error = "L'ancien mot de passe est incorrect";
+                return View();
+            }
+
+            // Vérifier si le mot de passe fait bien 6 caractères +
+            if (nouveauMotDePasse.Length < 6)
+            {
+                ViewBag.Error = "Votre nouveau mot de passe fait moins de 6 caractères !";
                 return View();
             }
 
