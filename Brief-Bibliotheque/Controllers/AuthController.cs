@@ -156,6 +156,13 @@ namespace Brief_Bibliotheque.Controllers
                 return View();
             }
 
+            // Vérifier si le mot de passe fait bien 6 caractères +
+            if (nouveauMotDePasse.Length < 6)
+            {
+                ViewBag.Error = "Votre nouveau mot de passe fait moins de 6 caractères !";
+                return View();
+            }
+
             // Hacher et sauvegarder le nouveau mot de passe
             user.MotDePasse = PasswordHashHandler.HashPassword(nouveauMotDePasse);
 
