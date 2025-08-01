@@ -19,13 +19,16 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Emprunts" asp-action="Index">
                                 @if (User.IsInRole("Membre"))
                                 {
                                     <span style="color:darkslateblue">Mes emprunts</span>
                                 }
-                                else
+                                else 
                                 {
                                     <span>Consulter Emprunts</span>
                                 }
@@ -43,6 +46,7 @@
                                 }
                             </a>
                         </li>
+                        }
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Livres" asp-action="Index">Livres</a>
                         </li>
