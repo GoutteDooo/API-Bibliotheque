@@ -2,6 +2,7 @@
 using Brief_Bibliotheque.Models.Classes;
 using Brief_Bibliotheque.Models.Classes.Enums;
 using Brief_Bibliotheque.Models.Data;
+using Brief_Bibliotheque.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -9,6 +10,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Drawing.Printing;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -19,10 +21,12 @@ namespace Brief_Bibliotheque.Controllers
     public class UtilisateursController : Controller
     {
         private readonly BiblioDB _context;
+        private readonly UtilisateurService _utilisateurService;
 
-        public UtilisateursController(BiblioDB context)
+        public UtilisateursController(BiblioDB context, UtilisateurService utilisateurService)
         {
             _context = context;
+            _utilisateurService = utilisateurService;
         }
 
         // GET: Utilisateurs
@@ -218,6 +222,19 @@ namespace Brief_Bibliotheque.Controllers
                 return NotFound();
             }
 
+            // Un Employé ne peut supprimer que les Membres
+            if (User.IsInRole("Employé") && utilisateurs.Role != Role.Membre)
+            {
+                return Unauthorized();
+            }
+            
+            // Un Admin ne peut pas se supprimer lui-même
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (Convert.ToInt32(userId) == utilisateurs.Id)
+            {
+                return Unauthorized();
+            }
+
             return View(utilisateurs);
         }
 
@@ -226,13 +243,18 @@ namespace Brief_Bibliotheque.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var utilisateurs = await _context.Utilisateurs.FindAsync(id);
-            if (utilisateurs != null)
-            {
-                _context.Utilisateurs.Remove(utilisateurs);
-            }
+            var userToRemove = await _context.Utilisateurs.FindAsync(id);
 
-            await _context.SaveChangesAsync();
+            // Un Employé ne peut supprimer que les Membres (vérification côté serveur contre le hack)
+            if (User.IsInRole("Employé") && userToRemove != null && userToRemove.Role != Role.Membre)
+                return Unauthorized();
+            
+            // Un utilisateur ne peut pas se supprimer lui-même (vérification côté serveur contre le hack)
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userId) || Convert.ToInt32(userId) == userToRemove?.Id)
+                return Unauthorized();
+
+            await _utilisateurService.SupprimerUtilisateurAsync(id);
             return RedirectToAction(nameof(Index));
         }
 

@@ -49,8 +49,9 @@ namespace Brief_Bibliotheque
                     };
                 });
 
-            // Enregistrer le service JWT
+            // Enregistrer les services
             builder.Services.AddScoped<JwtService>();
+            builder.Services.AddScoped<UtilisateurService>();
 
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen(c =>
@@ -91,7 +92,7 @@ namespace Brief_Bibliotheque
                 });
             }
 
-            // Remplir le contexte de "données graines"
+            // Remplir le contexte de "donnï¿½es graines"
             using (var scope = app.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;
