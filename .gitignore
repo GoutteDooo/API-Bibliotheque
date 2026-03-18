@@ -365,8 +365,6 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 
-Brief-Bibliotheque/Migrations
-Brief-Bibliotheque/Migrations/*
 Brief-Bibliotheque/biblio.db
 Brief-Bibliotheque/biblio*
 Brief-Bibliotheque/Brief-Bibliotheque.http
