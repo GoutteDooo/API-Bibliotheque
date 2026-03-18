@@ -97,6 +97,9 @@ namespace Brief_Bibliotheque
             {
                 var services = scope.ServiceProvider;
 
+                var db = services.GetRequiredService<BiblioDB>();
+                db.Database.Migrate();
+
                 SeedData.Initialize(services);
             }
 
