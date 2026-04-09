@@ -19,8 +19,9 @@ namespace Brief_Bibliotheque
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
+            var dbPath = Path.Combine(builder.Environment.ContentRootPath, "biblio.db");
             builder.Services.AddDbContext<BiblioDB>(options =>
-                options.UseSqlite("Data Source=biblio.db"));
+                options.UseSqlite($"Data Source={dbPath}"));
 
             // Configuration JWT
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
